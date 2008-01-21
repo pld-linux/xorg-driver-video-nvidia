@@ -1,74 +1,58 @@
 #
 # Conditional build:
 %bcond_without	dist_kernel	# without distribution kernel
-%bcond_without	smp		# without smp packages
 %bcond_without	kernel		# without kernel packages
-%bcond_without	incall		# include all tarballs
 %bcond_without	userspace	# don't build userspace programs
-%bcond_with	verbose		# verbose build (V=1)
-#
+%bcond_with	multigl		# package libGL and libglx.so in a way allowing concurrent install with nvidia/fglrx drivers
+
 %define		no_install_post_strip 1
-#
-%define		_nv_ver		1.0
-%define		_nv_rel		8774
-%define		_min_x11	6.7.0
-%define		_rel		0.1
-#
-%define		need_x86	0
-%define		need_x8664	0
-%if %{with incall}
-%define		need_x86	1
-%define		need_x8664	1
-%else
-%ifarch %{ix86}
-%define		need_x86	1
+
+%if "%{_alt_kernel}" != "%{nil}"
+%undefine	with_userspace
 %endif
-%ifarch %{x8664}
-%define		need_x8664	1
-%endif
-%endif
-#
-Summary:	Linux Drivers for nVidia TNT/TNT2/GeForce/Quadro Chips
-Summary(pl):	Sterowniki do kart graficznych nVidia TNT/TNT2/GeForce/Quadro
-Name:		xorg-driver-video-nvidia
-Version:	%{_nv_ver}.%{_nv_rel}
-Release:	%{_rel}
+
+%define		pname		xorg-driver-video-nvidia
+%define		rel		2
+
+Summary:	Linux Drivers for nVidia GeForce/Quadro Chips
+Summary(pl.UTF-8):	Sterowniki do kart graficznych nVidia GeForce/Quadro
+Name:		%{pname}%{_alt_kernel}
+Version:	169.07
+Release:	%{rel}%{?with_multigl:.mgl}
 License:	nVidia Binary
 Group:		X11
-%if %{need_x86}
-Source0:	http://download.nvidia.com/XFree86/Linux-x86/%{_nv_ver}-%{_nv_rel}/NVIDIA-Linux-x86-%{_nv_ver}-%{_nv_rel}-pkg1.run
-# Source0-md5:	eb01a4372096ee7799e6560cf568c1c2
-%endif
-%if %{need_x8664}
-Source1:	http://download.nvidia.com/XFree86/Linux-x86_64/%{_nv_ver}-%{_nv_rel}/NVIDIA-Linux-x86_64-%{_nv_ver}-%{_nv_rel}-pkg2.run
-# Source1-md5:	1f569a860caf1c4314444536c7e659dd
-%endif
-Source2:	%{name}-xinitrc.sh
+Source0:	http://us.download.nvidia.com/XFree86/Linux-x86/%{version}/NVIDIA-Linux-x86-%{version}-pkg1.run
+# Source0-md5:	c4e9374dc4e7ce1a84dbfe25a800188a
+Source1:	http://us.download.nvidia.com/XFree86/Linux-x86_64/%{version}/NVIDIA-Linux-x86_64-%{version}-pkg2.run
+# Source1-md5:	7011bafddac098c5792b7fa73e86d610
+Source2:	%{pname}-xinitrc.sh
 Patch0:		X11-driver-nvidia-GL.patch
 Patch1:		X11-driver-nvidia-desktop.patch
-URL:		http://www.nvidia.com/object/linux.html
+URL:		http://www.nvidia.com/object/unix.html
 %if %{with kernel}
-%{?with_dist_kernel:BuildRequires:	kernel%{_alt_kernel}-module-build >= 3:2.6.7}
+%{?with_dist_kernel:BuildRequires:	kernel%{_alt_kernel}-module-build >= 3:2.6.20.2}
 %endif
 BuildRequires:	%{kgcc_package}
-BuildRequires:	rpmbuild(macros) >= 1.308
+BuildRequires:	rpmbuild(macros) >= 1.379
 BuildRequires:	sed >= 4.0
 BuildConflicts:	XFree86-nvidia
 Requires:	xorg-xserver-server
-Provides:	OpenGL = 1.5
-Provides:	OpenGL-GLX
-Provides:	X11-OpenGL-core
-Provides:	X11-OpenGL-libGL
-Provides:	XFree86-OpenGL-core
-Provides:	XFree86-OpenGL-libGL
-Provides:	xorg-xserver-modules-libglx
+Requires:	xorg-xserver-server(videodrv-abi) = 2.0
+Provides:	OpenGL = 2.1
+Provides:	OpenGL-GLX = 1.4
+Provides:	xorg-xserver-libglx
+%if !%{with multigl}
 Obsoletes:	Mesa
-Obsoletes:	X11-OpenGL-core
-Obsoletes:	X11-OpenGL-libGL
-Obsoletes:	XFree86-OpenGL-core
-Obsoletes:	XFree86-OpenGL-libGL
+%endif
+Obsoletes:	X11-OpenGL-core < 1:7.0.0
+Obsoletes:	X11-OpenGL-libGL < 1:7.0.0
+Obsoletes:	XFree86-OpenGL-core < 1:7.0.0
+Obsoletes:	XFree86-OpenGL-libGL < 1:7.0.0
 Obsoletes:	XFree86-driver-nvidia
 Obsoletes:	XFree86-nvidia
+%if !%{with multigl}
+Conflicts:	Mesa-libGL
+%endif
 Conflicts:	XFree86-OpenGL-devel <= 4.2.0-3
 ExclusiveArch:	%{ix86} %{x8664}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -76,47 +60,64 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_noautoreqdep	libGL.so.1 libGLcore.so.1
 
 %description
-This driver set adds improved 2D functionality to the Xorg/XFree86 X
-server as well as high performance OpenGL acceleration, AGP support,
-support for most flat panels, and 2D multiple monitor support.
+This driver set adds improved 2D functionality to the Xorg X server as
+well as high performance OpenGL acceleration, AGP support, support for
+most flat panels, and 2D multiple monitor support. Supported hardware:
+modern NVIDIA GeForce (from GeForce2 MX) and Quadro (Quadro4 and up)
+based graphics accelerators.
 
-Hardware: nVidia TNT, TNT2, GeForce, or Quadro based graphics
-accelerator. The nVidia NV1 and RIVA 128/128ZX chips are supported in
-the base Xorg/XFree86 install and are not supported by this driver
-set.
+The older graphics chips are unsupported:
+- NV1 and RIVA 128/128ZX chips are supported in the base Xorg install
+  (nv driver)
+- TNT/TNT2/GeForce 256/GeForce2 Ultra/Quadro2 are suported by -legacy
+  drivers.
 
-%description -l pl
-Usprawnione sterowniki dla kart graficznych nVidia do serwera
-Xorg/XFree86, daj±ce wysokowydajn± akceleracjê OpenGL, obs³ugê AGP i
-wielu monitorów 2D.
+%description -l pl.UTF-8
+Usprawnione sterowniki dla kart graficznych nVidia do serwera Xorg,
+dajÄ…ce wysokowydajnÄ… akceleracjÄ™ OpenGL, obsÅ‚ugÄ™ AGP i wielu monitorÃ³w
+2D. ObsÅ‚ugujÄ… w miarÄ™ nowe karty NVIDIA GeForce (od wersji GeForce2
+MX) oraz Quadro (od wersji Quadro4).
 
-Obs³uguj± karty nVidia TNT/TNT2/GeForce/Quadro do serwera
-Xorg/XFree86; Karty nVidia NV1 i Riva 128/128ZX s± obs³ugiwane przez
-sterownik nv z pakietów Xorg/XFree8 - NIE s± obs³ugiwane przez ten
-pakiet.
+Starsze ukÅ‚ady graficzne nie sÄ… obsÅ‚ugiwane przez ten pakiet:
+- NV1 i RIVA 128/128ZX sÄ… obsÅ‚ugiwane przez sterownik nv z Xorg
+- TNT/TNT2/GeForce 256/GeForce 2 Ultra/Quadro 2 sÄ… obsÅ‚ugiwane przez
+  sterowniki -legacy
 
 %package devel
-Summary:	OpenGL for X11R6 development (only gl?.h)
-Summary(pl):	Pliki nag³ówkowe OpenGL dla systemu X11R6 (tylko gl?.h)
+Summary:	OpenGL (GL and GLX) header files
+Summary(pl.UTF-8):	Pliki nagÅ‚Ã³wkowe OpenGL (GL i GLX)
 Group:		X11/Development/Libraries
 Requires:	%{name} = %{version}-%{release}
-Provides:	OpenGL-GLX-devel
-Provides:	OpenGL-devel = 1.5
-Provides:	OpenGL-devel-base
-Obsoletes:	OpenGL-devel-base
+Provides:	OpenGL-GLX-devel = 1.4
+Provides:	OpenGL-devel = 2.1
+Obsoletes:	X11-OpenGL-devel-base
+Obsoletes:	XFree86-OpenGL-devel-base
 Obsoletes:	XFree86-driver-nvidia-devel
 Conflicts:	XFree86-OpenGL-devel < 4.3.99.902-0.3
 
 %description devel
-Base headers (only gl?.h) for OpenGL for X11R6 for nvidia drivers.
+OpenGL header files (GL and GLX only) for NVIDIA OpenGL
+implementation.
 
-%description devel -l pl
-Podstawowe pliki nag³ówkowe (tylko gl?.h) OpenGL dla systemu X11R6 dla
-sterowników nvidii.
+%description devel -l pl.UTF-8
+Pliki nagÅ‚Ã³wkowe OpenGL (tylko GL i GLX) dla implementacji OpenGL
+firmy NVIDIA.
+
+%package static
+Summary:	Static XvMCNVIDIA library
+Summary(pl.UTF-8):	Statyczna biblioteka XvMCNVIDIA
+Group:		X11/Development/Libraries
+Requires:	%{name}-devel = %{version}-%{release}
+
+%description static
+Static XvMCNVIDIA library.
+
+%description static -l pl.UTF-8
+Statyczna biblioteka XvMCNVIDIA.
 
 %package progs
 Summary:	Tools for advanced control of nVidia graphic cards
-Summary(pl):	Narzêdzia do zarz±dzania kartami graficznymi nVidia
+Summary(pl.UTF-8):	NarzÄ™dzia do zarzÄ…dzania kartami graficznymi nVidia
 Group:		Applications/System
 Requires:	%{name} = %{version}-%{release}
 Obsoletes:	XFree86-driver-nvidia-progs
@@ -124,63 +125,41 @@ Obsoletes:	XFree86-driver-nvidia-progs
 %description progs
 Tools for advanced control of nVidia graphic cards.
 
-%description progs -l pl
-Narzêdzia do zarz±dzania kartami graficznymi nVidia.
+%description progs -l pl.UTF-8
+NarzÄ™dzia do zarzÄ…dzania kartami graficznymi nVidia.
 
 %package -n kernel%{_alt_kernel}-video-nvidia
 Summary:	nVidia kernel module for nVidia Architecture support
-Summary(de):	Das nVidia-Kern-Modul für die nVidia-Architektur-Unterstützung
-Summary(pl):	Modu³ j±dra dla obs³ugi kart graficznych nVidia
-Version:	%{_nv_ver}.%{_nv_rel}
-Release:	%{_rel}@%{_kernel_ver_str}
+Summary(de.UTF-8):	Das nVidia-Kern-Modul fÃ¼r die nVidia-Architektur-UnterstÃ¼tzung
+Summary(pl.UTF-8):	ModuÅ‚ jÄ…dra dla obsÅ‚ugi kart graficznych nVidia
+Version:	%{version}
+Release:	%{rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	dev >= 2.7.7-10
-%{?with_dist_kernel:%requires_releq_kernel_up}
+%{?with_dist_kernel:%requires_releq_kernel}
 Provides:	X11-driver-nvidia(kernel)
 Obsoletes:	XFree86-nvidia-kernel
 
 %description -n kernel%{_alt_kernel}-video-nvidia
 nVidia Architecture support for Linux kernel.
 
-%description -n kernel%{_alt_kernel}-video-nvidia -l de
-Die nVidia-Architektur-Unterstützung für den Linux-Kern.
+%description -n kernel%{_alt_kernel}-video-nvidia -l de.UTF-8
+Die nVidia-Architektur-UnterstÃ¼tzung fÃ¼r den Linux-Kern.
 
-%description -n kernel%{_alt_kernel}-video-nvidia -l pl
-Obs³uga architektury nVidia dla j±dra Linuksa. Pakiet wymagany przez
+%description -n kernel%{_alt_kernel}-video-nvidia -l pl.UTF-8
+ObsÅ‚uga architektury nVidia dla jÄ…dra Linuksa. Pakiet wymagany przez
 sterownik nVidii dla Xorg/XFree86.
-
-%package -n kernel%{_alt_kernel}-smp-video-nvidia
-Summary:	nVidia kernel module for nVidia Architecture support
-Summary(de):	Das nVidia-Kern-Modul für die nVidia-Architektur-Unterstützung
-Summary(pl):	Modu³ j±dra dla obs³ugi kart graficznych nVidia
-Release:	%{_rel}@%{_kernel_ver_str}
-Group:		Base/Kernel
-Requires(post,postun):	/sbin/depmod
-Requires:	dev >= 2.7.7-10
-%{?with_dist_kernel:%requires_releq_kernel_smp}
-Provides:	X11-driver-nvidia(kernel)
-Obsoletes:	XFree86-nvidia-kernel
-
-%description -n kernel%{_alt_kernel}-smp-video-nvidia
-nVidia Architecture support for Linux kernel SMP.
-
-%description -n kernel%{_alt_kernel}-smp-video-nvidia -l de
-Die nVidia-Architektur-Unterstützung für den Linux-Kern SMP.
-
-%description -n kernel%{_alt_kernel}-smp-video-nvidia -l pl
-Obs³uga architektury nVidia dla j±dra Linuksa SMP. Pakiet wymagany
-przez sterownik nVidii dla Xorg/XFree86.
 
 %prep
 cd %{_builddir}
-rm -rf NVIDIA-Linux-x86*-%{_nv_ver}-%{_nv_rel}-pkg*
+rm -rf NVIDIA-Linux-x86*-%{version}-pkg*
 %ifarch %{ix86}
 /bin/sh %{SOURCE0} --extract-only
-%setup -qDT -n NVIDIA-Linux-x86-%{_nv_ver}-%{_nv_rel}-pkg1
+%setup -qDT -n NVIDIA-Linux-x86-%{version}-pkg1
 %else
 /bin/sh %{SOURCE1} --extract-only
-%setup -qDT -n NVIDIA-Linux-x86_64-%{_nv_ver}-%{_nv_rel}-pkg2
+%setup -qDT -n NVIDIA-Linux-x86_64-%{version}-pkg2
 %endif
 %patch0 -p1
 %patch1 -p1
@@ -190,35 +169,13 @@ echo 'EXTRA_CFLAGS += -Wno-pointer-arith -Wno-sign-compare -Wno-unused' >> usr/s
 %if %{with kernel}
 cd usr/src/nv/
 ln -sf Makefile.kbuild Makefile
-for cfg in %{?with_dist_kernel:%{?with_smp:smp} up}%{!?with_dist_kernel:nondist}; do
-	if [ ! -r "%{_kernelsrcdir}/config-$cfg" ]; then
-		exit 1
-	fi
-	install -d o/include/linux
-	ln -sf %{_kernelsrcdir}/config-$cfg o/.config
-	ln -sf %{_kernelsrcdir}/Module.symvers-$cfg o/Module.symvers
-	ln -sf %{_kernelsrcdir}/include/linux/autoconf-$cfg.h o/include/linux/autoconf.h
-%if %{with dist_kernel}
-	%{__make} -C %{_kernelsrcdir} O=$PWD/o prepare scripts
-%else
-	install -d o/include/config
-	touch o/include/config/MARKER
-	ln -sf %{_kernelsrcdir}/scripts o/scripts
-%endif
-	%{__make} -C %{_kernelsrcdir} clean \
-		RCS_FIND_IGNORE="-name '*.ko' -o -name nv-kernel.o -o" \
-		SYSSRC=%{_kernelsrcdir} \
-		SYSOUT=$PWD/o \
-		M=$PWD O=$PWD/o \
-		%{?with_verbose:V=1}
-	%{__make} -C %{_kernelsrcdir} modules \
-		CC="%{__cc}" CPP="%{__cpp}" \
-		SYSSRC=%{_kernelsrcdir} \
-		SYSOUT=$PWD/o \
-		M=$PWD O=$PWD/o \
-		%{?with_verbose:V=1}
-	mv nvidia.ko nvidia-$cfg.ko
-done
+cat >> Makefile <<'EOF'
+
+$(obj)/nv-kernel.o: $(src)/nv-kernel.o.bin
+	cp $< $@
+EOF
+mv nv-kernel.o{,.bin}
+%build_kernel_modules -m nvidia
 %endif
 
 %install
@@ -228,6 +185,9 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_libdir}/xorg/modules/{drivers,extensions} \
 	$RPM_BUILD_ROOT{%{_includedir}/GL,%{_libdir},%{_bindir},%{_mandir}/man1} \
 	$RPM_BUILD_ROOT{%{_desktopdir},%{_pixmapsdir},/etc/X11/xinit/xinitrc.d}
+%if %{with multigl}
+install -d $RPM_BUILD_ROOT{%{_libdir}/nvidia,%{_sysconfdir}/ld.so.conf.d}
+%endif
 
 install usr/bin/nvidia-{settings,xconfig,bug-report.sh} $RPM_BUILD_ROOT%{_bindir}
 install usr/share/man/man1/nvidia-{settings,xconfig}.* $RPM_BUILD_ROOT%{_mandir}/man1
@@ -237,38 +197,54 @@ install %{SOURCE2} $RPM_BUILD_ROOT/etc/X11/xinit/xinitrc.d/nvidia-settings.sh
 
 for f in \
 	usr/lib/tls/libnvidia-tls.so.%{version}		\
+	usr/lib/libnvidia-cfg.so.%{version}		\
 	usr/lib/libGL{,core}.so.%{version}		\
 	usr/X11R6/lib/libXvMCNVIDIA.so.%{version}	\
+%if !%{with multigl}
 	usr/X11R6/lib/libXvMCNVIDIA.a			\
 ; do
 	install $f $RPM_BUILD_ROOT%{_libdir}
 done
+%else
+; do
+	install $f $RPM_BUILD_ROOT%{_libdir}/nvidia
+done
+install usr/X11R6/lib/libXvMCNVIDIA.a $RPM_BUILD_ROOT%{_libdir}
+%endif
 
 install usr/X11R6/lib/modules/extensions/libglx.so.%{version} \
 	$RPM_BUILD_ROOT%{_libdir}/xorg/modules/extensions
-install usr/X11R6/lib/modules/drivers/nvidia_drv.o \
+install usr/X11R6/lib/modules/drivers/nvidia_drv.so \
 	$RPM_BUILD_ROOT%{_libdir}/xorg/modules/drivers
+install usr/X11R6/lib/modules/libnvidia-wfb.so.%{version} \
+	$RPM_BUILD_ROOT%{_libdir}/xorg/modules
 
 install usr/include/GL/*.h $RPM_BUILD_ROOT%{_includedir}/GL
 
 ln -sf libglx.so.%{version} $RPM_BUILD_ROOT%{_libdir}/xorg/modules/extensions/libglx.so
-ln -sf libXvMCNVIDIA.so.%{version} $RPM_BUILD_ROOT%{_libdir}/libXvMCNVIDIA.so
-ln -sf libXvMCNVIDIA.so.%{version} $RPM_BUILD_ROOT%{_libdir}/libXvMCNVIDIA_dynamic.so.1
+ln -sf libnvidia-wfb.so.%{version} $RPM_BUILD_ROOT%{_libdir}/xorg/modules/wfb.so
 
+%if %{with multigl}
+echo %{_libdir}/nvidia >$RPM_BUILD_ROOT%{_sysconfdir}/ld.so.conf.d/nvidia.conf
+
+# OpenGL ABI for Linux compatibility
+ln -sf libGL.so.%{version} $RPM_BUILD_ROOT%{_libdir}/nvidia/libGL.so.1
+ln -sf nvidia/libGL.so.1 $RPM_BUILD_ROOT%{_libdir}/libGL.so
+
+ln -sf nvidia/libXvMCNVIDIA.so.%{version} $RPM_BUILD_ROOT%{_libdir}/libXvMCNVIDIA.so
+ln -sf libXvMCNVIDIA.so.%{version} $RPM_BUILD_ROOT%{_libdir}/nvidia/libXvMCNVIDIA_dynamic.so.1
+%else
 # OpenGL ABI for Linux compatibility
 ln -sf libGL.so.%{version} $RPM_BUILD_ROOT%{_libdir}/libGL.so.1
 ln -sf libGL.so.1 $RPM_BUILD_ROOT%{_libdir}/libGL.so
+
+ln -sf libXvMCNVIDIA.so.%{version} $RPM_BUILD_ROOT%{_libdir}/libXvMCNVIDIA.so
+ln -sf libXvMCNVIDIA.so.%{version} $RPM_BUILD_ROOT%{_libdir}/libXvMCNVIDIA_dynamic.so.1
+%endif
 %endif
 
 %if %{with kernel}
-cd usr/src/nv/
-install -d $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}{,smp}/misc
-install nvidia-%{?with_dist_kernel:up}%{!?with_dist_kernel:nondist}.ko \
-	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc/nvidia.ko
-%if %{with smp} && %{with dist_kernel}
-install nvidia-smp.ko \
-	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/misc/nvidia.ko
-%endif
+%install_kernel_modules -m usr/src/nv/nvidia -d misc
 %endif
 
 %clean
@@ -277,17 +253,15 @@ rm -rf $RPM_BUILD_ROOT
 %post
 /sbin/ldconfig
 cat << EOF
-
- *******************************************************
- *                                                     *
- *  NOTE:                                              *
- *  You must install:                                  *
- *  kernel(24)(-smp)-video-nvidia-%{version}             *
- *  for this driver to work                            *
- *                                                     *
- *******************************************************
-
+NOTE: You must install:
+kernel-video-nvidia-%{version}
+for this driver to work
 EOF
+%if %{with multigl}
+if [ ! -e %{_libdir}/xorg/modules/extensions/libglx.so ]; then
+	ln -sf libglx.so.%{version} %{_libdir}/xorg/modules/extensions/libglx.so
+fi
+%endif
 
 %postun	-p /sbin/ldconfig
 
@@ -297,48 +271,54 @@ EOF
 %postun	-n kernel%{_alt_kernel}-video-nvidia
 %depmod %{_kernel_ver}
 
-%post	-n kernel%{_alt_kernel}-smp-video-nvidia
-%depmod %{_kernel_ver}smp
-
-%postun	-n kernel%{_alt_kernel}-smp-video-nvidia
-%depmod %{_kernel_ver}smp
-
 %if %{with userspace}
 %files
 %defattr(644,root,root,755)
 %doc LICENSE
 %doc usr/share/doc/{README.txt,NVIDIA_Changelog,XF86Config.sample,html}
-# OpenGL ABI for Linux compatibility
-%attr(755,root,root) %{_libdir}/libGL.so
-%attr(755,root,root) %{_libdir}/libGL.so.1
-#
+%if %{with multigl}
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/ld.so.conf.d/nvidia.conf
+%dir %{_libdir}/nvidia
+%attr(755,root,root) %{_libdir}/nvidia/libGL.so.*.*
+%attr(755,root,root) %ghost %{_libdir}/nvidia/libGL.so.1
+%attr(755,root,root) %{_libdir}/nvidia/libGLcore.so.*.*
+%attr(755,root,root) %{_libdir}/nvidia/libXvMCNVIDIA.so.*.*
+%attr(755,root,root) %{_libdir}/nvidia/libXvMCNVIDIA_dynamic.so.1
+%attr(755,root,root) %{_libdir}/nvidia/libnvidia-cfg.so.*.*.*
+%attr(755,root,root) %{_libdir}/nvidia/libnvidia-tls.so.*.*.*
+%attr(755,root,root) %{_libdir}/xorg/modules/extensions/libglx.so.*
+%ghost %{_libdir}/xorg/modules/extensions/libglx.so
+%else
 %attr(755,root,root) %{_libdir}/libGL.so.*.*
+%attr(755,root,root) %ghost %{_libdir}/libGL.so.1
+# symlink for binary apps which fail to conform Linux OpenGL ABI
+# (and dlopen libGL.so instead of libGL.so.1)
+%attr(755,root,root) %{_libdir}/libGL.so
 %attr(755,root,root) %{_libdir}/libGLcore.so.*.*
 %attr(755,root,root) %{_libdir}/libXvMCNVIDIA.so.*.*
 %attr(755,root,root) %{_libdir}/libXvMCNVIDIA_dynamic.so.1
-%attr(755,root,root) %{_libdir}/libnvidia-tls.so.*.*.*
+%attr(755,root,root) %{_libdir}/libnvidia-cfg.so.*.*
+%attr(755,root,root) %{_libdir}/libnvidia-tls.so.*.*
 %attr(755,root,root) %{_libdir}/xorg/modules/extensions/libglx.so*
-%attr(755,root,root) %{_libdir}/xorg/modules/drivers/nvidia_drv.o
 %endif
+%attr(755,root,root) %{_libdir}/xorg/modules/libnvidia-wfb.so.*.*
+%attr(755,root,root) %{_libdir}/xorg/modules/wfb.so
+%attr(755,root,root) %{_libdir}/xorg/modules/drivers/nvidia_drv.so
 
-%if %{with kernel}
-%files -n kernel%{_alt_kernel}-video-nvidia
-%defattr(644,root,root,755)
-/lib/modules/%{_kernel_ver}/misc/*.ko*
-
-%if %{with smp} && %{with dist_kernel}
-%files -n kernel%{_alt_kernel}-smp-video-nvidia
-%defattr(644,root,root,755)
-/lib/modules/%{_kernel_ver}smp/misc/*.ko*
-%endif
-%endif
-
-%if %{with userspace}
 %files devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libXvMCNVIDIA.so
-%{_includedir}/GL/*.h
-# -static
+%dir %{_includedir}/GL
+%{_includedir}/GL/gl.h
+%{_includedir}/GL/glext.h
+%{_includedir}/GL/glx.h
+%{_includedir}/GL/glxext.h
+%if %{with multigl}
+%attr(755,root,root) %{_libdir}/libGL.so
+%endif
+
+%files static
+%defattr(644,root,root,755)
 %{_libdir}/libXvMCNVIDIA.a
 
 %files progs
@@ -350,4 +330,10 @@ EOF
 %{_desktopdir}/nvidia-settings.desktop
 %{_mandir}/man1/nvidia-*
 %{_pixmapsdir}/nvidia-settings.png
+%endif
+
+%if %{with kernel}
+%files -n kernel%{_alt_kernel}-video-nvidia
+%defattr(644,root,root,755)
+/lib/modules/%{_kernel_ver}/misc/*.ko*
 %endif
