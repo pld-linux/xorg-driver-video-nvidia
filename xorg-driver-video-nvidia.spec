@@ -19,21 +19,21 @@
 %endif
 
 %define		pname		xorg-driver-video-nvidia
-%define		rel		11
+%define		rel		5%{?with_multigl:.mgl}
 
 Summary:	Linux Drivers for nVidia GeForce/Quadro Chips
 Summary(hu.UTF-8):	Linux meghajtók nVidia GeForce/Quadro chipekhez
 Summary(pl.UTF-8):	Sterowniki do kart graficznych nVidia GeForce/Quadro
 Name:		%{pname}%{_alt_kernel}
-Version:	180.22
-Release:	%{rel}%{?with_multigl:.mgl}
+Version:	180.29
+Release:	%{rel}
 Epoch:		1
 License:	nVidia Binary
 Group:		X11
 Source0:	http://download.nvidia.com/XFree86/Linux-x86/%{version}/NVIDIA-Linux-x86-%{version}-pkg0.run
-# Source0-md5:	265a984e973bcf5a7c2feeba4b0927a9
+# Source0-md5:	db9aa3683988b7b0872abae7182f5bc5
 Source1:	http://download.nvidia.com/XFree86/Linux-x86_64/%{version}/NVIDIA-Linux-x86_64-%{version}-pkg0.run
-# Source1-md5:	91a40e758b06429453d780932f51d6d9
+# Source1-md5:	318e36822c095fcd410161b1326797b1
 Source2:	%{pname}-xinitrc.sh
 Patch0:		X11-driver-nvidia-GL.patch
 Patch1:		X11-driver-nvidia-desktop.patch
@@ -109,7 +109,7 @@ Summary:	OpenGL (GL and GLX) header files
 Summary(hu.UTF-8):	OpenGL (GL és GLX) fejléc fájlok
 Summary(pl.UTF-8):	Pliki nagłówkowe OpenGL (GL i GLX)
 Group:		X11/Development/Libraries
-Requires:	%{pname} = %{epoch}:%{version}-%{release}
+Requires:	%{pname} = %{epoch}:%{version}-%{rel}
 Provides:	OpenGL-GLX-devel = 1.4
 Provides:	OpenGL-devel = 2.1
 Obsoletes:	X11-OpenGL-devel-base
@@ -133,7 +133,7 @@ Summary:	Static XvMCNVIDIA library
 Summary(hu.UTF-8):	Statikus XwMCNVIDIA könyvtár
 Summary(pl.UTF-8):	Statyczna biblioteka XvMCNVIDIA
 Group:		X11/Development/Libraries
-Requires:	%{pname}-devel = %{epoch}:%{version}-%{release}
+Requires:	%{pname}-devel = %{epoch}:%{version}-%{rel}
 
 %description static
 Static XvMCNVIDIA library.
@@ -149,7 +149,7 @@ Summary:	Tools for advanced control of nVidia graphic cards
 Summary(hu.UTF-8):	Eszközök az nVidia grafikus kártyák beállításához
 Summary(pl.UTF-8):	Narzędzia do zarządzania kartami graficznymi nVidia
 Group:		Applications/System
-Requires:	%{pname} = %{epoch}:%{version}-%{release}
+Requires:	%{pname} = %{epoch}:%{version}-%{rel}
 Suggests:	pkgconfig
 Obsoletes:	XFree86-driver-nvidia-progs
 
@@ -167,12 +167,12 @@ Summary:	nVidia kernel module for nVidia Architecture support
 Summary(de.UTF-8):	Das nVidia-Kern-Modul für die nVidia-Architektur-Unterstützung
 Summary(hu.UTF-8):	nVidia Architektúra támogatás Linux kernelhez.
 Summary(pl.UTF-8):	Moduł jądra dla obsługi kart graficznych nVidia
-Release:	%{release}@%{_kernel_ver_str}
+Release:	%{rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 Requires:	dev >= 2.7.7-10
 %{?with_dist_kernel:%requires_releq_kernel}
-Requires:	%{pname} = %{epoch}:%{version}-%{release}
+Requires:	%{pname} = %{epoch}:%{version}-%{rel}
 Provides:	X11-driver-nvidia(kernel)
 Obsoletes:	XFree86-nvidia-kernel
 
