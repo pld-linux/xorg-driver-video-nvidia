@@ -25,7 +25,7 @@ exit 1
 
 %define		no_install_post_check_so 1
 
-%define		rel	4
+%define		rel	5
 %define		pname	xorg-driver-video-nvidia
 Summary:	Linux Drivers for nVidia GeForce/Quadro Chips
 Summary(hu.UTF-8):	Linux meghajtók nVidia GeForce/Quadro chipekhez
@@ -231,7 +231,10 @@ cd kernel\
 %{__make} SYSSRC=%{_kernelsrcdir} clean\
 %{__make} SYSSRC=%{_kernelsrcdir} IGNORE_CC_MISMATCH=1 module\
 cd ..\
-%install_kernel_modules -D installed -m kernel/nvidia,kernel/nvidia-modeset,kernel/nvidia-uvm -d misc\
+%install_kernel_modules -D installed -m kernel/nvidia,kernel/nvidia-modeset -d misc\
+%ifarch %{x8664}\
+%install_kernel_modules -D installed -m kernel/nvidia-uvm -d misc\
+%endif\
 %{nil}
 
 %{?with_kernel:%{expand:%create_kernel_packages}}
