@@ -32,22 +32,23 @@ Summary(hu.UTF-8):	Linux meghajtók nVidia GeForce/Quadro chipekhez
 Summary(pl.UTF-8):	Sterowniki do kart graficznych nVidia GeForce/Quadro
 Name:		%{pname}%{?_pld_builder:%{?with_kernel:-kernel}}%{_alt_kernel}
 # when updating version here, keep nvidia-settings.spec in sync as well
-Version:	361.28
-Release:	%{rel}%{?_pld_builder:%{?with_kernel:@%{_kernel_ver_str}}}
+Version:	355.00.28
+Release:	%{rel}vulkan%{?_pld_builder:%{?with_kernel:@%{_kernel_ver_str}}}
 Epoch:		1
 License:	nVidia Binary
 Group:		X11
-Source0:	http://us.download.nvidia.com/XFree86/Linux-x86/%{version}/NVIDIA-Linux-x86-%{version}.run
-# Source0-md5:	d4fc7fcf1204a46f15733d7cc2711ad2
-Source1:	http://us.download.nvidia.com/XFree86/Linux-x86_64/%{version}/NVIDIA-Linux-x86_64-%{version}-no-compat32.run
-# Source1-md5:	8799b9a29ea1ef72feb739f1d8290728
+# http://developer.download.nvidia.com/assets/gameworks/downloads/secure/Vulkan_Beta_Drivers/NVIDIA-Linux-x86_64-355.00.28.run?autho=1456314747_c2356a23598f1a881ac80c7f995dad4f&file=NVIDIA-Linux-x86_64-355.00.28.run
+Source0:	NVIDIA-Linux-x86-%{version}.run
+# Source0-md5:	976b573d63fe649dd383396b74a1e9f5
+Source1:	NVIDIA-Linux-x86_64-%{version}.run
+# Source1-md5:	ba5223c5210ec78c0857678e013517be
 Source2:	%{pname}-xinitrc.sh
 Source3:	gl.pc.in
 Source4:	10-nvidia.conf
 Source5:	10-nvidia-modules.conf
 Patch0:		X11-driver-nvidia-GL.patch
 Patch1:		X11-driver-nvidia-desktop.patch
-URL:		http://www.nvidia.com/object/unix.html
+URL:		https://developer.nvidia.com/vulkan-driver
 BuildRequires:	rpmbuild(macros) >= 1.701
 %{?with_kernel:%{expand:%buildrequires_kernel kernel%%{_alt_kernel}-module-build >= 3:2.6.20.2}}
 BuildRequires:	sed >= 4.0
@@ -58,6 +59,7 @@ Requires:	xorg-xserver-server(videodrv-abi) <= 20.0
 Requires:	xorg-xserver-server(videodrv-abi) >= 2.0
 Provides:	ocl-icd(nvidia)
 Provides:	ocl-icd-driver
+Provides:	vulkan(icd) = 1.0.3
 Provides:	xorg-driver-video
 Provides:	xorg-xserver-module(glx)
 Obsoletes:	XFree86-driver-nvidia
@@ -231,7 +233,7 @@ cd kernel\
 %{__make} SYSSRC=%{_kernelsrcdir} clean\
 %{__make} SYSSRC=%{_kernelsrcdir} IGNORE_CC_MISMATCH=1 module\
 cd ..\
-%install_kernel_modules -D installed -m kernel/nvidia,kernel/nvidia-modeset -d misc\
+%install_kernel_modules -D installed -m kernel/nvidia -d misc\
 %ifarch %{x8664}\
 %install_kernel_modules -D installed -m kernel/nvidia-uvm -d misc\
 %endif\
@@ -247,7 +249,7 @@ rm -rf NVIDIA-Linux-x86*-%{version}*
 %setup -qDT -n NVIDIA-Linux-x86-%{version}
 %else
 /bin/sh %{SOURCE1} --extract-only
-%setup -qDT -n NVIDIA-Linux-x86_64-%{version}-no-compat32
+%setup -qDT -n NVIDIA-Linux-x86_64-%{version}
 %endif
 %patch0 -p1
 %patch1 -p1
@@ -263,7 +265,8 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_libdir}/{nvidia,xorg/modules/{drivers,extensions/nvidia}} \
 	$RPM_BUILD_ROOT{%{_includedir}/GL,%{_libdir}/vdpau,%{_bindir},%{_mandir}/man1} \
 	$RPM_BUILD_ROOT{%{_desktopdir},%{_pixmapsdir},/etc/X11/xinit/xinitrc.d} \
-	$RPM_BUILD_ROOT%{_sysconfdir}/{OpenCL/vendors,ld.so.conf.d,X11/xorg.conf.d}
+	$RPM_BUILD_ROOT%{_sysconfdir}/{OpenCL/vendors,ld.so.conf.d,X11/xorg.conf.d} \
+	$RPM_BUILD_ROOT%{_datadir}/vulkan/icd.d
 
 %if %{with settings}
 install -p nvidia-settings $RPM_BUILD_ROOT%{_bindir}
@@ -341,6 +344,8 @@ sed -e '
 	s|@@version@@|%{version}|g' < %{SOURCE3} \
 	> $RPM_BUILD_ROOT%{_pkgconfigdir}/gl.pc
 
+install nvidia_icd.json $RPM_BUILD_ROOT%{_datadir}/vulkan/icd.d
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -368,6 +373,7 @@ EOF
 %attr(755,root,root) %{_libdir}/xorg/modules/drivers/nvidia_drv.so
 %{_sysconfdir}/X11/xorg.conf.d/10-nvidia.conf
 %{_sysconfdir}/X11/xorg.conf.d/10-nvidia-modules.conf
+%{_datadir}/vulkan/icd.d/nvidia_icd.json
 
 %files libs
 %defattr(644,root,root,755)
