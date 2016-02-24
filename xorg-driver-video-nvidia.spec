@@ -329,6 +329,8 @@ ln -sf libGL.so.%{version} $RPM_BUILD_ROOT%{_libdir}/nvidia/libGL.so.1
 ln -sf libGL.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libGL.so
 ln -sf libcuda.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libcuda.so
 ln -sf libnvcuvid.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libnvcuvid.so
+
+install nvidia_icd.json $RPM_BUILD_ROOT%{_datadir}/vulkan/icd.d
 %endif
 
 %if %{with kernel}
@@ -343,8 +345,6 @@ sed -e '
 	s|@@includedir@@|%{_includedir}|g;
 	s|@@version@@|%{version}|g' < %{SOURCE3} \
 	> $RPM_BUILD_ROOT%{_pkgconfigdir}/gl.pc
-
-install nvidia_icd.json $RPM_BUILD_ROOT%{_datadir}/vulkan/icd.d
 
 %clean
 rm -rf $RPM_BUILD_ROOT
