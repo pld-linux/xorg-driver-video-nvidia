@@ -53,7 +53,7 @@ BuildRequires:	rpmbuild(macros) >= 1.701
 %{?with_kernel:%{expand:%buildrequires_kernel kernel%%{_alt_kernel}-module-build >= 3:2.6.20.2}}
 BuildRequires:	sed >= 4.0
 BuildConflicts:	XFree86-nvidia
-Requires:	%{pname}-libs = %{epoch}:%{version}-%{rel}
+Requires:	%{pname}-libs = %{epoch}:%{version}-%{rel}vulkan
 Requires:	xorg-xserver-server
 Requires:	xorg-xserver-server(videodrv-abi) <= 20.0
 Requires:	xorg-xserver-server(videodrv-abi) >= 2.0
@@ -131,7 +131,7 @@ Summary:	OpenGL (GL and GLX) header files
 Summary(hu.UTF-8):	OpenGL (GL és GLX) fejléc fájlok
 Summary(pl.UTF-8):	Pliki nagłówkowe OpenGL (GL i GLX)
 Group:		X11/Development/Libraries
-Requires:	%{pname}-libs = %{epoch}:%{version}-%{rel}
+Requires:	%{pname}-libs = %{epoch}:%{version}-%{rel}vulkan
 Provides:	OpenGL-GLX-devel = 1.4
 Provides:	OpenGL-devel = 2.1
 Obsoletes:	X11-OpenGL-devel-base
@@ -182,7 +182,7 @@ Summary:	nVidia kernel module for nVidia Architecture support\
 Summary(de.UTF-8):	Das nVidia-Kern-Modul für die nVidia-Architektur-Unterstützung\
 Summary(hu.UTF-8):	nVidia Architektúra támogatás Linux kernelhez.\
 Summary(pl.UTF-8):	Moduł jądra dla obsługi kart graficznych nVidia\
-Release:	%{rel}@%{_kernel_ver_str}\
+Release:	%{rel}vulkan@%{_kernel_ver_str}\
 Group:		Base/Kernel\
 Requires(post,postun):	/sbin/depmod\
 Requires:	dev >= 2.7.7-10\
