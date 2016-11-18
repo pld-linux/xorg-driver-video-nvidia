@@ -32,15 +32,15 @@ Summary(hu.UTF-8):	Linux meghajtók nVidia GeForce/Quadro chipekhez
 Summary(pl.UTF-8):	Sterowniki do kart graficznych nVidia GeForce/Quadro
 Name:		%{pname}%{?_pld_builder:%{?with_kernel:-kernel}}%{_alt_kernel}
 # when updating version here, keep nvidia-settings.spec in sync as well
-Version:	370.28
+Version:	375.20
 Release:	%{rel}%{?_pld_builder:%{?with_kernel:@%{_kernel_ver_str}}}
 Epoch:		1
 License:	nVidia Binary
 Group:		X11
 Source0:	http://us.download.nvidia.com/XFree86/Linux-x86/%{version}/NVIDIA-Linux-x86-%{version}.run
-# Source0-md5:	7d3e1c691cd53852f422a93169268178
+# Source0-md5:	b9bfa7f3f591418972e963b087ab91e3
 Source1:	http://us.download.nvidia.com/XFree86/Linux-x86_64/%{version}/NVIDIA-Linux-x86_64-%{version}-no-compat32.run
-# Source1-md5:	3bcd9a132e50a17b846869f1c57b9c75
+# Source1-md5:	88ac9b63a41ecd6b1214b04f44a61c79
 Source2:	%{pname}-xinitrc.sh
 Source3:	gl.pc.in
 Source4:	10-nvidia.conf
@@ -54,7 +54,7 @@ BuildRequires:	sed >= 4.0
 BuildConflicts:	XFree86-nvidia
 Requires:	%{pname}-libs = %{epoch}:%{version}-%{rel}
 Requires:	xorg-xserver-server
-Requires:	xorg-xserver-server(videodrv-abi) <= 20.0
+Requires:	xorg-xserver-server(videodrv-abi) <= 23.0
 Requires:	xorg-xserver-server(videodrv-abi) >= 2.0
 Provides:	ocl-icd(nvidia)
 Provides:	ocl-icd-driver
