@@ -1,0 +1,24 @@
+--- NVIDIA-Linux-x86_64-375.20-no-compat32/kernel/nvidia-drm/nvidia-drm-connector.c~	2016-11-16 00:44:48.000000000 +0100
++++ NVIDIA-Linux-x86_64-375.20-no-compat32/kernel/nvidia-drm/nvidia-drm-connector.c	2016-12-05 00:09:42.798550337 +0100
+@@ -21,6 +21,7 @@
+  */
+ 
+ #include "conftest.h" /* NV_DRM_ATOMIC_MODESET_AVAILABLE */
++#include <linux/version.h>
+ 
+ #if defined(NV_DRM_ATOMIC_MODESET_AVAILABLE)
+ 
+@@ -299,7 +299,12 @@
+     return count;
+ }
+ 
+-static int nvidia_drm_atomic_helper_connector_dpms(
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 2, 0))
++static void
++#else
++static int
++#endif
++nvidia_drm_atomic_helper_connector_dpms(
+     struct drm_connector *connector,
+     int mode)
+ {
