@@ -152,6 +152,9 @@ firmy NVIDIA.
 %package doc
 Summary:	Documentation for NVIDIA Graphics Driver
 Group:		Documentation
+%if "%{_rpmversion}" >= "5"
+BuildArch:	noarch
+%endif
 
 %description doc
 NVIDIA Accelerated Linux Graphics Driver README and Installation
