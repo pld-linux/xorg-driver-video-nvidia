@@ -25,7 +25,7 @@ exit 1
 
 %define		no_install_post_check_so 1
 
-%define		rel	1
+%define		rel	2
 %define		pname	xorg-driver-video-nvidia
 Summary:	Linux Drivers for nVidia GeForce/Quadro Chips
 Summary(hu.UTF-8):	Linux meghajtók nVidia GeForce/Quadro chipekhez
@@ -59,6 +59,7 @@ Requires:	xorg-xserver-server(videodrv-abi) <= 23.0
 Requires:	xorg-xserver-server(videodrv-abi) >= 2.0
 Provides:	ocl-icd(nvidia)
 Provides:	ocl-icd-driver
+Provides:	vulkan(icd) = 1.0.24
 Provides:	xorg-driver-video
 Provides:	xorg-xserver-module(glx)
 Obsoletes:	XFree86-driver-nvidia
@@ -268,7 +269,8 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_libdir}/{nvidia,xorg/modules/{drivers,extensions/nvidia}} \
 	$RPM_BUILD_ROOT{%{_includedir}/GL,%{_libdir}/vdpau,%{_bindir},%{_mandir}/man1} \
 	$RPM_BUILD_ROOT{%{_desktopdir},%{_pixmapsdir},/etc/X11/xinit/xinitrc.d} \
-	$RPM_BUILD_ROOT%{_sysconfdir}/{OpenCL/vendors,ld.so.conf.d,X11/xorg.conf.d}
+	$RPM_BUILD_ROOT%{_sysconfdir}/{OpenCL/vendors,ld.so.conf.d,X11/xorg.conf.d} \
+	$RPM_BUILD_ROOT%{_datadir}/vulkan/icd.d
 
 %if %{with settings}
 install -p nvidia-settings $RPM_BUILD_ROOT%{_bindir}
@@ -353,6 +355,8 @@ ln -sf libGLESv1_CM.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libGLESv1_CM.so
 ln -sf libGLESv2.so.2 $RPM_BUILD_ROOT%{_libdir}/nvidia/libGLESv2.so
 ln -sf libcuda.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libcuda.so
 ln -sf libnvcuvid.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libnvcuvid.so
+
+install nvidia_icd.json $RPM_BUILD_ROOT%{_datadir}/vulkan/icd.d
 %endif
 
 %if %{with kernel}
@@ -395,6 +399,7 @@ EOF
 %attr(755,root,root) %{_libdir}/xorg/modules/drivers/nvidia_drv.so
 %{_sysconfdir}/X11/xorg.conf.d/10-nvidia.conf
 %{_sysconfdir}/X11/xorg.conf.d/10-nvidia-modules.conf
+%{_datadir}/vulkan/icd.d/nvidia_icd.json
 
 %files libs
 %defattr(644,root,root,755)
