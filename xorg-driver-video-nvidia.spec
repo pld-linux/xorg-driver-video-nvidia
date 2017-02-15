@@ -25,22 +25,22 @@ exit 1
 
 %define		no_install_post_check_so 1
 
-%define		rel	2
+%define		rel	1
 %define		pname	xorg-driver-video-nvidia
 Summary:	Linux Drivers for nVidia GeForce/Quadro Chips
 Summary(hu.UTF-8):	Linux meghajtók nVidia GeForce/Quadro chipekhez
 Summary(pl.UTF-8):	Sterowniki do kart graficznych nVidia GeForce/Quadro
 Name:		%{pname}%{?_pld_builder:%{?with_kernel:-kernel}}%{_alt_kernel}
 # when updating version here, keep nvidia-settings.spec in sync as well
-Version:	375.26
+Version:	378.13
 Release:	%{rel}%{?_pld_builder:%{?with_kernel:@%{_kernel_ver_str}}}
 Epoch:		1
 License:	nVidia Binary
 Group:		X11
 Source0:	http://us.download.nvidia.com/XFree86/Linux-x86/%{version}/NVIDIA-Linux-x86-%{version}.run
-# Source0-md5:	b0706e88ad173f6b9c7bd2e5a838c163
+# Source0-md5:	dd1077750af9a067739ec291fb24175f
 Source1:	http://us.download.nvidia.com/XFree86/Linux-x86_64/%{version}/NVIDIA-Linux-x86_64-%{version}-no-compat32.run
-# Source1-md5:	5595fb385e41638c5118784114b03d9a
+# Source1-md5:	fe4d25b19a780a690cafc8e3b7c0113f
 Source2:	%{pname}-xinitrc.sh
 Source3:	gl.pc.in
 Source4:	10-nvidia.conf
@@ -59,7 +59,7 @@ Requires:	xorg-xserver-server(videodrv-abi) <= 23.0
 Requires:	xorg-xserver-server(videodrv-abi) >= 2.0
 Provides:	ocl-icd(nvidia)
 Provides:	ocl-icd-driver
-Provides:	vulkan(icd) = 1.0.24
+Provides:	vulkan(icd) = 1.0.37
 Provides:	xorg-driver-video
 Provides:	xorg-xserver-module(glx)
 Obsoletes:	XFree86-driver-nvidia
@@ -305,7 +305,7 @@ for f in \
 	libnvcuvid.so.%{version}		\
 	libnvidia-cfg.so.%{version}		\
 	libnvidia-compiler.so.%{version}	\
-	libnvidia-egl-wayland.so.%{version}	\
+	libnvidia-egl-wayland.so.1.0.1		\
 	libnvidia-eglcore.so.%{version}		\
 	libnvidia-encode.so.%{version}		\
 	libnvidia-fatbinaryloader.so.%{version}	\
@@ -434,7 +434,7 @@ EOF
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-cfg.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-cfg.so.1
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-compiler.so.*.*
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-egl-wayland.so.*.*
+%attr(755,root,root) %{_libdir}/nvidia/libnvidia-egl-wayland.so.*.*.*
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-eglcore.so.*.*
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-encode.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-encode.so.1
