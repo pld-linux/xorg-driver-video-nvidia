@@ -59,7 +59,7 @@ Requires:	xorg-xserver-server(videodrv-abi) <= 23.0
 Requires:	xorg-xserver-server(videodrv-abi) >= 2.0
 Provides:	ocl-icd(nvidia)
 Provides:	ocl-icd-driver
-Provides:	vulkan(icd) = 1.0.37
+Provides:	vulkan(icd) = 1.0.42
 Provides:	xorg-driver-video
 Provides:	xorg-xserver-module(glx)
 Obsoletes:	XFree86-driver-nvidia
