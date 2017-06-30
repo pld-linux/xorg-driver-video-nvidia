@@ -4,6 +4,7 @@
 # - kernel-drm is required on never kernels. driver for kernel-longterm not requires drm
 #
 # Conditional build:
+%bcond_with	glvnd		# with GL vendor neutral libs
 %bcond_without	kernel		# without kernel packages
 %bcond_without	userspace	# don't build userspace programs
 %bcond_with	settings	# package nvidia-settings here (GPL version of same packaged from nvidia-settings.spec)
@@ -112,6 +113,11 @@ Summary:	OpenGL (GL and GLX) Nvidia libraries
 Summary(pl.UTF-8):	Biblioteki OpenGL (GL i GLX) Nvidia
 Group:		X11/Development/Libraries
 Requires(post,postun):	/sbin/ldconfig
+%if %{with glvnd}
+Requires:	libglvnd
+Requires:	libglvnd-libGL
+Requires:	libglvnd-libGLES
+%endif
 Requires:	libvdpau >= 0.3
 Provides:	OpenGL = 3.3
 Provides:	OpenGL-GLX = 1.4
@@ -290,23 +296,21 @@ install %{SOURCE5} $RPM_BUILD_ROOT/etc/X11/xorg.conf.d
 sed -i -e 's|@@LIBDIR@@|%{_libdir}|g' $RPM_BUILD_ROOT/etc/X11/xorg.conf.d/10-nvidia-modules.conf
 
 for f in \
-	libGL.so.%{version}			\
-	libGLX.so.0				\
+%if %{with glvnd}
 	libGLX_nvidia.so.%{version}		\
-	libGLdispatch.so.0			\
 	libEGL.so.1				\
 	libEGL_nvidia.so.%{version}		\
-	libGLESv1_CM.so.1			\
 	libGLESv1_CM_nvidia.so.%{version}	\
-	libGLESv2.so.2				\
 	libGLESv2_nvidia.so.%{version}		\
-	libOpenGL.so.0				\
+	libnvidia-egl-wayland.so.1.0.1		\
+	libnvidia-eglcore.so.%{version}		\
+%else
+	libGL.so.%{version}			\
+%endif
 	libcuda.so.%{version}			\
 	libnvcuvid.so.%{version}		\
 	libnvidia-cfg.so.%{version}		\
 	libnvidia-compiler.so.%{version}	\
-	libnvidia-egl-wayland.so.1.0.1		\
-	libnvidia-eglcore.so.%{version}		\
 	libnvidia-encode.so.%{version}		\
 	libnvidia-fatbinaryloader.so.%{version}	\
 	libnvidia-fbc.so.%{version}	\
@@ -346,13 +350,17 @@ echo %{_libdir}/vdpau >>$RPM_BUILD_ROOT%{_sysconfdir}/ld.so.conf.d/nvidia.conf
 %endif
 
 # OpenGL ABI for Linux compatibility
-ln -sf libGL.so.%{version} $RPM_BUILD_ROOT%{_libdir}/nvidia/libGL.so.1
-ln -sf libGL.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libGL.so
-ln -sf libGLX.so.0 $RPM_BUILD_ROOT%{_libdir}/nvidia/libGLX.so
+%if %{with glvnd}
+ln -sf libGLX_nvidia.so.%{version} $RPM_BUILD_ROOT%{_libdir}/nvidia/libGLX_nvidia.so.0
 ln -sf libGLX_nvidia.so.%{version} $RPM_BUILD_ROOT%{_libdir}/nvidia/libGLX_indirect.so.0
 ln -sf libEGL.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libEGL.so
-ln -sf libGLESv1_CM.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libGLESv1_CM.so
-ln -sf libGLESv2.so.2 $RPM_BUILD_ROOT%{_libdir}/nvidia/libGLESv2.so
+ln -sf libEGL_nvidia.so.%{version} $RPM_BUILD_ROOT%{_libdir}/nvidia/libEGL_nvidia.so.0
+ln -sf libGLESv1_CM_nvidia.so.%{version} $RPM_BUILD_ROOT%{_libdir}/nvidia/libGLESv1_CM_nvidia.so.1
+ln -sf libGLESv2_nvidia.so.%{version} $RPM_BUILD_ROOT%{_libdir}/nvidia/libGLESv2_nvidia.so.2
+%else
+ln -sf libGL.so.%{version} $RPM_BUILD_ROOT%{_libdir}/nvidia/libGL.so.1
+ln -sf libGL.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libGL.so
+%endif
 ln -sf libcuda.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libcuda.so
 ln -sf libnvcuvid.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libnvcuvid.so
 
@@ -408,23 +416,23 @@ EOF
 %{_sysconfdir}/OpenCL/vendors/nvidia.icd
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/ld.so.conf.d/nvidia*.conf
 %dir %{_libdir}/nvidia
+%if %{with glvnd}
 %attr(755,root,root) %{_libdir}/nvidia/libEGL.so.1
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libEGL_nvidia.so.0
 %attr(755,root,root) %{_libdir}/nvidia/libEGL_nvidia.so.*.*
-%attr(755,root,root) %{_libdir}/nvidia/libGL.so.*.*
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libGL.so.1
-%attr(755,root,root) %{_libdir}/nvidia/libGLESv1_CM.so.1
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libGLESv1_CM_nvidia.so.1
 %attr(755,root,root) %{_libdir}/nvidia/libGLESv1_CM_nvidia.so.*.*
-%attr(755,root,root) %{_libdir}/nvidia/libGLESv2.so.2
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libGLESv2_nvidia.so.2
 %attr(755,root,root) %{_libdir}/nvidia/libGLESv2_nvidia.so.*.*
-%attr(755,root,root) %{_libdir}/nvidia/libGLX.so.0
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libGLX_indirect.so.0
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libGLX_nvidia.so.0
 %attr(755,root,root) %{_libdir}/nvidia/libGLX_nvidia.so.*.*
-%attr(755,root,root) %{_libdir}/nvidia/libGLdispatch.so.0
-%attr(755,root,root) %{_libdir}/nvidia/libOpenGL.so.0
+%attr(755,root,root) %{_libdir}/nvidia/libnvidia-egl-wayland.so.*.*.*
+%attr(755,root,root) %{_libdir}/nvidia/libnvidia-eglcore.so.*.*
+%else
+%attr(755,root,root) %{_libdir}/nvidia/libGL.so.*.*
+%attr(755,root,root) %ghost %{_libdir}/nvidia/libGL.so.1
+%endif
 %attr(755,root,root) %{_libdir}/nvidia/libcuda.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libcuda.so.1
 %attr(755,root,root) %{_libdir}/nvidia/libcuda.so
@@ -434,8 +442,6 @@ EOF
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-cfg.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-cfg.so.1
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-compiler.so.*.*
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-egl-wayland.so.*.*.*
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-eglcore.so.*.*
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-encode.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-encode.so.1
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-fatbinaryloader.so.*.*
@@ -461,11 +467,11 @@ EOF
 %{_includedir}/GL/glext.h
 %{_includedir}/GL/glx.h
 %{_includedir}/GL/glxext.h
-%attr(755,root,root) %{_libdir}/nvidia/libGL.so
-%attr(755,root,root) %{_libdir}/nvidia/libGLX.so
+%if %{with glvnd}
 %attr(755,root,root) %{_libdir}/nvidia/libEGL.so
-%attr(755,root,root) %{_libdir}/nvidia/libGLESv1_CM.so
-%attr(755,root,root) %{_libdir}/nvidia/libGLESv2.so
+%else
+%attr(755,root,root) %{_libdir}/nvidia/libGL.so
+%endif
 %{_pkgconfigdir}/gl.pc
 
 %files doc
