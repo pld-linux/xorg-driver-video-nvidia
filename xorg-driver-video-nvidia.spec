@@ -19,6 +19,12 @@
 exit 1
 %endif
 
+%if %{with glvnd}
+%define		vulkan_lib	libGLX_nvidia.so.0
+%else
+%define		vulkan_lib	libGL.so.1
+%endif
+
 %if %{without userspace}
 # nothing to be placed to debuginfo package
 %define		_enable_debug_packages	0
@@ -364,7 +370,7 @@ ln -sf libGL.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libGL.so
 ln -sf libcuda.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libcuda.so
 ln -sf libnvcuvid.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libnvcuvid.so
 
-install nvidia_icd.json $RPM_BUILD_ROOT%{_datadir}/vulkan/icd.d
+sed 's!"library_path":[[:blank:]]*"[^"]\+"!"library_path": "%{vulkan_lib}"!g' nvidia_icd.json > $RPM_BUILD_ROOT%{_datadir}/vulkan/icd.d/nvidia_icd.json
 %endif
 
 %if %{with kernel}
