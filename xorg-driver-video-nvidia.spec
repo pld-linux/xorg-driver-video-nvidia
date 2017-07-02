@@ -5,6 +5,7 @@
 #
 # Conditional build:
 %bcond_with	glvnd		# with GL vendor neutral libs
+%bcond_without	system_libglvnd	# do not use system libglvnd
 %bcond_without	kernel		# without kernel packages
 %bcond_without	userspace	# don't build userspace programs
 %bcond_with	settings	# package nvidia-settings here (GPL version of same packaged from nvidia-settings.spec)
@@ -119,7 +120,7 @@ Summary:	OpenGL (GL and GLX) Nvidia libraries
 Summary(pl.UTF-8):	Biblioteki OpenGL (GL i GLX) Nvidia
 Group:		X11/Development/Libraries
 Requires(post,postun):	/sbin/ldconfig
-%if %{with glvnd}
+%if %{with glvnd} && %{with system_libglvnd}
 Requires:	libglvnd
 Requires:	libglvnd-libGL
 Requires:	libglvnd-libGLES
@@ -303,6 +304,14 @@ sed -i -e 's|@@LIBDIR@@|%{_libdir}|g' $RPM_BUILD_ROOT/etc/X11/xorg.conf.d/10-nvi
 
 for f in \
 %if %{with glvnd}
+%if %{without system_libglvnd}
+	libGL.so.1.0.0				\
+	libGLX.so.0				\
+	libOpenGL.so.0				\
+	libGLdispatch.so.0			\
+	libGLESv1_CM.so.1			\
+	libGLESv2.so.2				\
+%endif
 	libGLX_nvidia.so.%{version}		\
 	libEGL.so.1				\
 	libEGL_nvidia.so.%{version}		\
@@ -357,6 +366,14 @@ echo %{_libdir}/vdpau >>$RPM_BUILD_ROOT%{_sysconfdir}/ld.so.conf.d/nvidia.conf
 
 # OpenGL ABI for Linux compatibility
 %if %{with glvnd}
+%if %{without system_libglvnd}
+ln -sf libGL.so.1.0.0 $RPM_BUILD_ROOT%{_libdir}/nvidia/libGL.so.1
+ln -sf libGL.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libGL.so
+ln -sf libGLX.so.0 $RPM_BUILD_ROOT%{_libdir}/nvidia/libGLX.so
+ln -sf libOpenGL.so.0 $RPM_BUILD_ROOT%{_libdir}/nvidia/libOpenGL.so
+ln -sf libGLESv1_CM.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libGLESv1_CM.so
+ln -sf libGLESv2.so.2 $RPM_BUILD_ROOT%{_libdir}/nvidia/libGLESv2.so
+%endif
 ln -sf libGLX_nvidia.so.%{version} $RPM_BUILD_ROOT%{_libdir}/nvidia/libGLX_nvidia.so.0
 ln -sf libGLX_nvidia.so.%{version} $RPM_BUILD_ROOT%{_libdir}/nvidia/libGLX_indirect.so.0
 ln -sf libEGL.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libEGL.so
@@ -423,6 +440,15 @@ EOF
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/ld.so.conf.d/nvidia*.conf
 %dir %{_libdir}/nvidia
 %if %{with glvnd}
+%if %{without system_libglvnd}
+%attr(755,root,root) %{_libdir}/nvidia/libGL.so.1.0.0
+%attr(755,root,root) %ghost %{_libdir}/nvidia/libGL.so.1
+%attr(755,root,root) %{_libdir}/nvidia/libGLX.so.0
+%attr(755,root,root) %{_libdir}/nvidia/libOpenGL.so.0
+%attr(755,root,root) %{_libdir}/nvidia/libGLdispatch.so.0
+%attr(755,root,root) %{_libdir}/nvidia/libGLESv1_CM.so.1
+%attr(755,root,root) %{_libdir}/nvidia/libGLESv2.so.2
+%endif
 %attr(755,root,root) %{_libdir}/nvidia/libEGL.so.1
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libEGL_nvidia.so.0
 %attr(755,root,root) %{_libdir}/nvidia/libEGL_nvidia.so.*.*
@@ -474,6 +500,13 @@ EOF
 %{_includedir}/GL/glx.h
 %{_includedir}/GL/glxext.h
 %if %{with glvnd}
+%if %{without system_libglvnd}
+%attr(755,root,root) %{_libdir}/nvidia/libGL.so
+%attr(755,root,root) %{_libdir}/nvidia/libGLX.so
+%attr(755,root,root) %{_libdir}/nvidia/libOpenGL.so
+%attr(755,root,root) %{_libdir}/nvidia/libGLESv1_CM.so
+%attr(755,root,root) %{_libdir}/nvidia/libGLESv2.so
+%endif
 %attr(755,root,root) %{_libdir}/nvidia/libEGL.so
 %else
 %attr(755,root,root) %{_libdir}/nvidia/libGL.so
