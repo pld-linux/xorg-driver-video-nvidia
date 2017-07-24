@@ -3,7 +3,7 @@
 @@ -21,6 +21,7 @@
   */
  
- #include "conftest.h" /* NV_DRM_ATOMIC_MODESET_AVAILABLE */
+ #include "nvidia-drm-conftest.h" /* NV_DRM_ATOMIC_MODESET_AVAILABLE */
 +#include <linux/version.h>
  
  #if defined(NV_DRM_ATOMIC_MODESET_AVAILABLE)
