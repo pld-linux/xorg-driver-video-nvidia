@@ -1,6 +1,6 @@
---- NVIDIA-Linux-x86_64-270.30-no-compat32/nvidia-settings.desktop	2011-02-26 00:54:20.000000000 +0200
-+++ NVIDIA-Linux-x86_64-270.30-no-compat32/nvidia-settings.desktop	2011-03-13 22:15:28.674244734 +0200
-@@ -1,9 +1,10 @@
+--- NVIDIA-Linux-x86_64-387.22-no-compat32/nvidia-settings.desktop.orig	2017-10-30 19:01:41.321706656 +0100
++++ NVIDIA-Linux-x86_64-387.22-no-compat32/nvidia-settings.desktop	2017-10-30 19:04:57.757191009 +0100
+@@ -1,9 +1,11 @@
  [Desktop Entry]
  Type=Application
  Encoding=UTF-8
@@ -8,12 +8,11 @@
 -Comment=Configure NVIDIA X Server Settings
 -Exec=__UTILS_PATH__/nvidia-settings
 -Icon=__PIXMAP_PATH__/nvidia-settings.png
--Categories=Application;Settings;
--
 +Name=nVidia X Server Settings
 +Name[pl]=Ustawienia X serwera nVidii
 +Comment=Configure nVidia X Server Settings
 +Comment[pl]=Konfiguracja ustawień X serwera NVndii
 +Exec=nvidia-settings
 +Icon=nvidia-settings
-+Categories=Settings;HardwareSettings;
+ Categories=Settings;HardwareSettings;
+ 
