@@ -430,7 +430,7 @@ EOF
 %attr(755,root,root) %{_libdir}/xorg/modules/extensions/nvidia/libglx.so
 %attr(755,root,root) %{_libdir}/xorg/modules/drivers/nvidia_drv.so.*
 %attr(755,root,root) %{_libdir}/xorg/modules/drivers/nvidia_drv.so
-%{_sysconfdir}/X11/xorg.conf.d/10-nvidia.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/X11/xorg.conf.d/10-nvidia.conf
 %{_sysconfdir}/X11/xorg.conf.d/10-nvidia-modules.conf
 %{_sysconfdir}/X11/xorg.conf.d/10-nvidia-drm-outputclass.conf
 %dir %{_datadir}/nvidia
