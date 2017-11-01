@@ -299,6 +299,7 @@ install -p nvidia.icd $RPM_BUILD_ROOT%{_sysconfdir}/OpenCL/vendors
 install %{SOURCE4} $RPM_BUILD_ROOT/etc/X11/xorg.conf.d
 install %{SOURCE5} $RPM_BUILD_ROOT/etc/X11/xorg.conf.d
 sed -i -e 's|@@LIBDIR@@|%{_libdir}|g' $RPM_BUILD_ROOT/etc/X11/xorg.conf.d/10-nvidia-modules.conf
+install -p nvidia-drm-outputclass.conf $RPM_BUILD_ROOT/etc/X11/xorg.conf.d/10-nvidia-drm-outputclass.conf
 
 for f in \
 %if %{with glvnd}
@@ -428,6 +429,7 @@ EOF
 %attr(755,root,root) %{_libdir}/xorg/modules/drivers/nvidia_drv.so
 %{_sysconfdir}/X11/xorg.conf.d/10-nvidia.conf
 %{_sysconfdir}/X11/xorg.conf.d/10-nvidia-modules.conf
+%{_sysconfdir}/X11/xorg.conf.d/10-nvidia-drm-outputclass.conf
 %{_datadir}/vulkan/icd.d/nvidia_icd.json
 
 %files libs
