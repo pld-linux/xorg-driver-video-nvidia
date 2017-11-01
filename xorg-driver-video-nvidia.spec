@@ -281,7 +281,7 @@ install -d $RPM_BUILD_ROOT%{_libdir}/{nvidia,xorg/modules/{drivers,extensions/nv
 	$RPM_BUILD_ROOT{%{_includedir}/GL,%{_libdir}/vdpau,%{_bindir},%{_mandir}/man1} \
 	$RPM_BUILD_ROOT{%{_desktopdir},%{_pixmapsdir},/etc/X11/xinit/xinitrc.d} \
 	$RPM_BUILD_ROOT%{_sysconfdir}/{OpenCL/vendors,ld.so.conf.d,X11/xorg.conf.d} \
-	$RPM_BUILD_ROOT%{_datadir}/vulkan/icd.d
+	$RPM_BUILD_ROOT%{_datadir}/{nvidia,vulkan/icd.d}
 
 %if %{with settings}
 install -p nvidia-settings $RPM_BUILD_ROOT%{_bindir}
@@ -300,6 +300,9 @@ install %{SOURCE4} $RPM_BUILD_ROOT/etc/X11/xorg.conf.d
 install %{SOURCE5} $RPM_BUILD_ROOT/etc/X11/xorg.conf.d
 sed -i -e 's|@@LIBDIR@@|%{_libdir}|g' $RPM_BUILD_ROOT/etc/X11/xorg.conf.d/10-nvidia-modules.conf
 install -p nvidia-drm-outputclass.conf $RPM_BUILD_ROOT/etc/X11/xorg.conf.d/10-nvidia-drm-outputclass.conf
+
+install -p nvidia-application-profiles-%{version}-key-documentation $RPM_BUILD_ROOT%{_datadir}/nvidia
+install -p nvidia-application-profiles-%{version}-rc $RPM_BUILD_ROOT%{_datadir}/nvidia
 
 for f in \
 %if %{with glvnd}
@@ -430,6 +433,9 @@ EOF
 %{_sysconfdir}/X11/xorg.conf.d/10-nvidia.conf
 %{_sysconfdir}/X11/xorg.conf.d/10-nvidia-modules.conf
 %{_sysconfdir}/X11/xorg.conf.d/10-nvidia-drm-outputclass.conf
+%dir %{_datadir}/nvidia
+%{_datadir}/nvidia/nvidia-application-profiles-%{version}-key-documentation
+%{_datadir}/nvidia/nvidia-application-profiles-%{version}-rc
 %{_datadir}/vulkan/icd.d/nvidia_icd.json
 
 %files libs
