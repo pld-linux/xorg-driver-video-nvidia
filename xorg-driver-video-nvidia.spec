@@ -321,7 +321,7 @@ for f in \
 	libEGL_nvidia.so.%{version}		\
 	libGLESv1_CM_nvidia.so.%{version}	\
 	libGLESv2_nvidia.so.%{version}		\
-	libnvidia-egl-wayland.so.1.0.1		\
+	libnvidia-egl-wayland.so.1.0.2		\
 	libnvidia-eglcore.so.%{version}		\
 %else
 	libGL.so.%{version}			\
