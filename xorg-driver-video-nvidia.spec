@@ -384,6 +384,8 @@ ln -sf libGLX_nvidia.so.%{version} $RPM_BUILD_ROOT%{_libdir}/nvidia/libGLX_indir
 ln -sf libEGL_nvidia.so.%{version} $RPM_BUILD_ROOT%{_libdir}/nvidia/libEGL_nvidia.so.0
 ln -sf libGLESv1_CM_nvidia.so.%{version} $RPM_BUILD_ROOT%{_libdir}/nvidia/libGLESv1_CM_nvidia.so.1
 ln -sf libGLESv2_nvidia.so.%{version} $RPM_BUILD_ROOT%{_libdir}/nvidia/libGLESv2_nvidia.so.2
+
+install -p 10_nvidia.json $RPM_BUILD_ROOT%{_datadir}/glvnd/egl_vendor.d
 %else
 ln -sf libGL.so.%{version} $RPM_BUILD_ROOT%{_libdir}/nvidia/libGL.so.1
 ln -sf libGL.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libGL.so
@@ -392,7 +394,6 @@ ln -sf libcuda.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libcuda.so
 ln -sf libnvcuvid.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libnvcuvid.so
 
 sed 's!__NV_VK_ICD__!%{vulkan_lib}!g' nvidia_icd.json.template > $RPM_BUILD_ROOT%{_datadir}/vulkan/icd.d/nvidia_icd.json
-install -p 10_nvidia.json $RPM_BUILD_ROOT%{_datadir}/glvnd/egl_vendor.d
 %endif
 
 %if %{with kernel}
