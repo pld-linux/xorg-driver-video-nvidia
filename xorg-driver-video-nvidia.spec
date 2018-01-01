@@ -283,7 +283,7 @@ install -d $RPM_BUILD_ROOT%{_libdir}/{nvidia,xorg/modules/{drivers,extensions/nv
 	$RPM_BUILD_ROOT{%{_includedir}/GL,%{_libdir}/vdpau,%{_bindir},%{_mandir}/man1} \
 	$RPM_BUILD_ROOT{%{_desktopdir},%{_pixmapsdir},/etc/X11/xinit/xinitrc.d} \
 	$RPM_BUILD_ROOT%{_sysconfdir}/{OpenCL/vendors,ld.so.conf.d,X11/xorg.conf.d} \
-	$RPM_BUILD_ROOT%{_datadir}/{nvidia,vulkan/icd.d}
+	$RPM_BUILD_ROOT%{_datadir}/{glvnd/egl_vendor.d,nvidia,vulkan/icd.d}
 
 %if %{with settings}
 install -p nvidia-settings $RPM_BUILD_ROOT%{_bindir}
@@ -392,6 +392,7 @@ ln -sf libcuda.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libcuda.so
 ln -sf libnvcuvid.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libnvcuvid.so
 
 sed 's!__NV_VK_ICD__!%{vulkan_lib}!g' nvidia_icd.json.template > $RPM_BUILD_ROOT%{_datadir}/vulkan/icd.d/nvidia_icd.json
+install -p 10_nvidia.json $RPM_BUILD_ROOT%{_datadir}/glvnd/egl_vendor.d
 %endif
 
 %if %{with kernel}
@@ -500,6 +501,9 @@ EOF
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-tls.so.*.*
 %attr(755,root,root) %{_libdir}/vdpau/libvdpau_nvidia.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/vdpau/libvdpau_nvidia.so.1
+%if %{with glvnd}
+%{_datadir}/glvnd/egl_vendor.d/10_nvidia.json
+%endif
 
 %files devel
 %defattr(644,root,root,755)
