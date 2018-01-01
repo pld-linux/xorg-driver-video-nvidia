@@ -439,7 +439,6 @@ EOF
 %dir %{_datadir}/nvidia
 %{_datadir}/nvidia/nvidia-application-profiles-%{version}-key-documentation
 %{_datadir}/nvidia/nvidia-application-profiles-%{version}-rc
-%{_datadir}/vulkan/icd.d/nvidia_icd.json
 
 %files libs
 %defattr(644,root,root,755)
@@ -504,6 +503,7 @@ EOF
 %if %{with glvnd}
 %{_datadir}/glvnd/egl_vendor.d/10_nvidia.json
 %endif
+%{_datadir}/vulkan/icd.d/nvidia_icd.json
 
 %files devel
 %defattr(644,root,root,755)
