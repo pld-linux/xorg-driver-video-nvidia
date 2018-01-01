@@ -315,9 +315,9 @@ for f in \
 	libGLdispatch.so.0			\
 	libGLESv1_CM.so.1			\
 	libGLESv2.so.2				\
+	libEGL.so.1				\
 %endif
 	libGLX_nvidia.so.%{version}		\
-	libEGL.so.1				\
 	libEGL_nvidia.so.%{version}		\
 	libGLESv1_CM_nvidia.so.%{version}	\
 	libGLESv2_nvidia.so.%{version}		\
@@ -377,10 +377,10 @@ ln -sf libGLX.so.0 $RPM_BUILD_ROOT%{_libdir}/nvidia/libGLX.so
 ln -sf libOpenGL.so.0 $RPM_BUILD_ROOT%{_libdir}/nvidia/libOpenGL.so
 ln -sf libGLESv1_CM.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libGLESv1_CM.so
 ln -sf libGLESv2.so.2 $RPM_BUILD_ROOT%{_libdir}/nvidia/libGLESv2.so
+ln -sf libEGL.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libEGL.so
 %endif
 ln -sf libGLX_nvidia.so.%{version} $RPM_BUILD_ROOT%{_libdir}/nvidia/libGLX_nvidia.so.0
 ln -sf libGLX_nvidia.so.%{version} $RPM_BUILD_ROOT%{_libdir}/nvidia/libGLX_indirect.so.0
-ln -sf libEGL.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libEGL.so
 ln -sf libEGL_nvidia.so.%{version} $RPM_BUILD_ROOT%{_libdir}/nvidia/libEGL_nvidia.so.0
 ln -sf libGLESv1_CM_nvidia.so.%{version} $RPM_BUILD_ROOT%{_libdir}/nvidia/libGLESv1_CM_nvidia.so.1
 ln -sf libGLESv2_nvidia.so.%{version} $RPM_BUILD_ROOT%{_libdir}/nvidia/libGLESv2_nvidia.so.2
@@ -456,8 +456,8 @@ EOF
 %attr(755,root,root) %{_libdir}/nvidia/libGLdispatch.so.0
 %attr(755,root,root) %{_libdir}/nvidia/libGLESv1_CM.so.1
 %attr(755,root,root) %{_libdir}/nvidia/libGLESv2.so.2
-%endif
 %attr(755,root,root) %{_libdir}/nvidia/libEGL.so.1
+%endif
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libEGL_nvidia.so.0
 %attr(755,root,root) %{_libdir}/nvidia/libEGL_nvidia.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libGLESv1_CM_nvidia.so.1
@@ -515,8 +515,8 @@ EOF
 %attr(755,root,root) %{_libdir}/nvidia/libOpenGL.so
 %attr(755,root,root) %{_libdir}/nvidia/libGLESv1_CM.so
 %attr(755,root,root) %{_libdir}/nvidia/libGLESv2.so
-%endif
 %attr(755,root,root) %{_libdir}/nvidia/libEGL.so
+%endif
 %else
 %attr(755,root,root) %{_libdir}/nvidia/libGL.so
 %endif
