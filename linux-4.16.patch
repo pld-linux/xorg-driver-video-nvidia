@@ -1,0 +1,12 @@
+diff -ur NVIDIA-Linux-x86_64-390.48-no-compat32.orig/kernel/common/inc/nv-linux.h NVIDIA-Linux-x86_64-390.48-no-compat32/kernel/common/inc/nv-linux.h
+--- NVIDIA-Linux-x86_64-390.48-no-compat32.orig/kernel/common/inc/nv-linux.h	2018-04-06 23:06:17.967287478 +0200
++++ NVIDIA-Linux-x86_64-390.48-no-compat32/kernel/common/inc/nv-linux.h	2018-04-06 23:06:31.980554716 +0200
+@@ -1209,7 +1209,7 @@
+ static inline NvBool nv_dma_maps_swiotlb(struct pci_dev *dev)
+ {
+     NvBool swiotlb_in_use = NV_FALSE;
+-#if defined(CONFIG_SWIOTLB)
++#if defined(CONFIG_SWIOTLB) && LINUX_VERSION_CODE < KERNEL_VERSION(4, 16, 0)
+   #if defined(NV_DMA_OPS_PRESENT) || defined(NV_GET_DMA_OPS_PRESENT)
+     /*
+      * We only use the 'dma_ops' symbol on older x86_64 kernels; later kernels,
