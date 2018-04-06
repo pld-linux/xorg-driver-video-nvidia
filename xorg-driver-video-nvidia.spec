@@ -309,13 +309,13 @@ install -p nvidia-application-profiles-%{version}-rc $RPM_BUILD_ROOT%{_datadir}/
 for f in \
 %if %{with glvnd}
 %if %{without system_libglvnd}
-	libGL.so.1.0.0				\
+	libGL.so.1.7.0				\
 	libGLX.so.0				\
 	libOpenGL.so.0				\
 	libGLdispatch.so.0			\
-	libGLESv1_CM.so.1			\
-	libGLESv2.so.2				\
-	libEGL.so.1				\
+	libGLESv1_CM.so.1.2.0			\
+	libGLESv2.so.2.1.0			\
+	libEGL.so.1.1.0				\
 %endif
 	libGLX_nvidia.so.%{version}		\
 	libEGL_nvidia.so.%{version}		\
@@ -371,12 +371,15 @@ echo %{_libdir}/vdpau >>$RPM_BUILD_ROOT%{_sysconfdir}/ld.so.conf.d/nvidia.conf
 # OpenGL ABI for Linux compatibility
 %if %{with glvnd}
 %if %{without system_libglvnd}
-ln -sf libGL.so.1.0.0 $RPM_BUILD_ROOT%{_libdir}/nvidia/libGL.so.1
+ln -sf libGL.so.1.7.0 $RPM_BUILD_ROOT%{_libdir}/nvidia/libGL.so.1
 ln -sf libGL.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libGL.so
 ln -sf libGLX.so.0 $RPM_BUILD_ROOT%{_libdir}/nvidia/libGLX.so
 ln -sf libOpenGL.so.0 $RPM_BUILD_ROOT%{_libdir}/nvidia/libOpenGL.so
+ln -sf libGLESv1_CM.so.1.2.0 $RPM_BUILD_ROOT%{_libdir}/nvidia/libGLESv1_CM.so.1
 ln -sf libGLESv1_CM.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libGLESv1_CM.so
+ln -sf libGLESv2.so.2.1.0 $RPM_BUILD_ROOT%{_libdir}/nvidia/libGLESv2.so.2
 ln -sf libGLESv2.so.2 $RPM_BUILD_ROOT%{_libdir}/nvidia/libGLESv2.so
+ln -sf libEGL.so.1.1.0 $RPM_BUILD_ROOT%{_libdir}/nvidia/libEGL.so.1
 ln -sf libEGL.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libEGL.so
 %endif
 ln -sf libGLX_nvidia.so.%{version} $RPM_BUILD_ROOT%{_libdir}/nvidia/libGLX_nvidia.so.0
@@ -450,14 +453,17 @@ EOF
 %dir %{_libdir}/nvidia
 %if %{with glvnd}
 %if %{without system_libglvnd}
-%attr(755,root,root) %{_libdir}/nvidia/libGL.so.1.0.0
+%attr(755,root,root) %{_libdir}/nvidia/libGL.so.1.7.0
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libGL.so.1
 %attr(755,root,root) %{_libdir}/nvidia/libGLX.so.0
 %attr(755,root,root) %{_libdir}/nvidia/libOpenGL.so.0
 %attr(755,root,root) %{_libdir}/nvidia/libGLdispatch.so.0
-%attr(755,root,root) %{_libdir}/nvidia/libGLESv1_CM.so.1
-%attr(755,root,root) %{_libdir}/nvidia/libGLESv2.so.2
-%attr(755,root,root) %{_libdir}/nvidia/libEGL.so.1
+%attr(755,root,root) %{_libdir}/nvidia/libGLESv1_CM.so.1.2.0
+%attr(755,root,root) %ghost %{_libdir}/nvidia/libGLESv1_CM.so.1
+%attr(755,root,root) %{_libdir}/nvidia/libGLESv2.so.2.1.0
+%attr(755,root,root) %ghost %{_libdir}/nvidia/libGLESv2.so.2
+%attr(755,root,root) %{_libdir}/nvidia/libEGL.so.1.1.0
+%attr(755,root,root) %ghost %{_libdir}/nvidia/libEGL.so.1
 %endif
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libEGL_nvidia.so.0
 %attr(755,root,root) %{_libdir}/nvidia/libEGL_nvidia.so.*.*
