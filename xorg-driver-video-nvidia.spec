@@ -334,7 +334,7 @@ for f in \
 	install -p $f $RPM_BUILD_ROOT%{_libdir}/nvidia
 done
 
-install -p libvdpau_nvidia.so.%{version} $RPM_BUILD_ROOT%{_libdir}/vdpau
+install -p %{srcdir}/libvdpau_nvidia.so.%{version} $RPM_BUILD_ROOT%{_libdir}/vdpau
 
 install -p libglx.so.%{version} $RPM_BUILD_ROOT%{_libdir}/xorg/modules/extensions/nvidia
 ln -s libglx.so.%{version} $RPM_BUILD_ROOT%{_libdir}/xorg/modules/extensions/nvidia/libglx.so
@@ -540,5 +540,4 @@ EOF
 %{_mandir}/man1/nvidia-settings.1*
 %{_desktopdir}/nvidia-settings.desktop
 %{_pixmapsdir}/nvidia-settings.png
-%endif
 %endif
