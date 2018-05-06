@@ -70,7 +70,7 @@ Provides:	xorg-xserver-module(glx)
 Obsoletes:	XFree86-driver-nvidia
 Obsoletes:	XFree86-nvidia
 Conflicts:	XFree86-OpenGL-devel <= 4.2.0-3
-ExclusiveArch:	%{x8664}
+ExclusiveArch:	%{ix86} %{x8664}
 BuildRoot:	%{tmpdir}/%{pname}-%{version}-root-%(id -u -n)
 
 %define		_noautoreqdep	libGL.so.1 libnvcuvid.so
@@ -189,6 +189,7 @@ Eszközök az nVidia grafikus kártyák beállításához.
 %description progs -l pl.UTF-8
 Narzędzia do zarządzania kartami graficznymi nVidia.
 
+%ifarch %{x8664}
 %define	kernel_pkg()\
 %package -n kernel%{_alt_kernel}-video-nvidia\
 Summary:	nVidia kernel module for nVidia Architecture support\
@@ -251,6 +252,7 @@ cd ..\
 %{nil}
 
 %{?with_kernel:%{expand:%create_kernel_packages}}
+%endif
 
 %prep
 cd %{_builddir}
@@ -262,7 +264,9 @@ rm -rf NVIDIA-Linux-x86_64-%{version}
 echo 'EXTRA_CFLAGS += -Wno-pointer-arith -Wno-sign-compare -Wno-unused' >> kernel/Makefile.kbuild
 
 %build
+%ifarch %{x8664}
 %{?with_kernel:%{expand:%build_kernel_packages}}
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -274,6 +278,7 @@ install -d $RPM_BUILD_ROOT%{_libdir}/{nvidia,xorg/modules/{drivers,extensions/nv
 	$RPM_BUILD_ROOT%{_sysconfdir}/{OpenCL/vendors,ld.so.conf.d,X11/xorg.conf.d} \
 	$RPM_BUILD_ROOT%{_datadir}/{glvnd/egl_vendor.d,nvidia,vulkan/icd.d}
 
+%ifarch %{x8664}
 %if %{with settings}
 install -p nvidia-settings $RPM_BUILD_ROOT%{_bindir}
 cp -p nvidia-settings.1* $RPM_BUILD_ROOT%{_mandir}/man1
@@ -294,54 +299,67 @@ install -p nvidia-drm-outputclass.conf $RPM_BUILD_ROOT/etc/X11/xorg.conf.d/10-nv
 
 install -p nvidia-application-profiles-%{version}-key-documentation $RPM_BUILD_ROOT%{_datadir}/nvidia
 install -p nvidia-application-profiles-%{version}-rc $RPM_BUILD_ROOT%{_datadir}/nvidia
+%endif
+
+%ifarch %{ix86}
+%define	srcdir	32
+%else
+%define	srcdir	.
+%endif
 
 for f in \
 %if %{with glvnd}
 %if %{without system_libglvnd}
-	libGL.so.1.7.0				\
-	libGLX.so.0				\
-	libOpenGL.so.0				\
-	libGLdispatch.so.0			\
-	libGLESv1_CM.so.1.2.0			\
-	libGLESv2.so.2.1.0			\
-	libEGL.so.1.1.0				\
+	%{srcdir}/libGL.so.1.7.0				\
+	%{srcdir}/libGLX.so.0				\
+	%{srcdir}/libOpenGL.so.0				\
+	%{srcdir}/libGLdispatch.so.0			\
+	%{srcdir}/libGLESv1_CM.so.1.2.0			\
+	%{srcdir}/libGLESv2.so.2.1.0			\
+	%{srcdir}/libEGL.so.1.1.0				\
 %endif
-	libGLX_nvidia.so.%{version}		\
-	libEGL_nvidia.so.%{version}		\
-	libGLESv1_CM_nvidia.so.%{version}	\
-	libGLESv2_nvidia.so.%{version}		\
-	libnvidia-egl-wayland.so.1.0.3		\
-	libnvidia-eglcore.so.%{version}		\
+	%{srcdir}/libGLX_nvidia.so.%{version}		\
+	%{srcdir}/libEGL_nvidia.so.%{version}		\
+	%{srcdir}/libGLESv1_CM_nvidia.so.%{version}	\
+	%{srcdir}/libGLESv2_nvidia.so.%{version}		\
+%ifarch %{x8664}
+	%{srcdir}/libnvidia-egl-wayland.so.1.0.3		\
+	%{srcdir}/libnvidia-eglcore.so.%{version}		\
+%endif
 %else
-	libGL.so.%{version}			\
+	%{srcdir}/libGL.so.%{version}			\
 %endif
-	libcuda.so.%{version}			\
-	libnvcuvid.so.%{version}		\
-	libnvidia-cfg.so.%{version}		\
-	libnvidia-compiler.so.%{version}	\
-	libnvidia-encode.so.%{version}		\
-	libnvidia-fatbinaryloader.so.%{version}	\
-	libnvidia-fbc.so.%{version}	\
-	libnvidia-glcore.so.%{version}		\
-	libnvidia-glsi.so.%{version}		\
-	libnvidia-glvkspirv.so.%{version}		\
-	libnvidia-ifr.so.%{version}		\
-	libnvidia-ml.so.%{version}		\
-	libnvidia-opencl.so.%{version}		\
-	libnvidia-ptxjitcompiler.so.%{version}	\
-	tls/libnvidia-tls.so.%{version}		\
+	%{srcdir}/libcuda.so.%{version}			\
+	%{srcdir}/libnvcuvid.so.%{version}		\
+%ifarch %{x8664}
+	%{srcdir}/libnvidia-cfg.so.%{version}		\
+%endif
+	%{srcdir}/libnvidia-compiler.so.%{version}	\
+	%{srcdir}/libnvidia-encode.so.%{version}		\
+	%{srcdir}/libnvidia-fatbinaryloader.so.%{version}	\
+	%{srcdir}/libnvidia-fbc.so.%{version}	\
+	%{srcdir}/libnvidia-glcore.so.%{version}		\
+	%{srcdir}/libnvidia-glsi.so.%{version}		\
+	%{srcdir}/libnvidia-glvkspirv.so.%{version}		\
+	%{srcdir}/libnvidia-ifr.so.%{version}		\
+	%{srcdir}/libnvidia-ml.so.%{version}		\
+	%{srcdir}/libnvidia-opencl.so.%{version}		\
+	%{srcdir}/libnvidia-ptxjitcompiler.so.%{version}	\
+	%{srcdir}/tls/libnvidia-tls.so.%{version}		\
 ; do
 	install -p $f $RPM_BUILD_ROOT%{_libdir}/nvidia
 done
 
 install -p %{srcdir}/libvdpau_nvidia.so.%{version} $RPM_BUILD_ROOT%{_libdir}/vdpau
 
+%ifarch %{x8664}
 install -p libglx.so.%{version} $RPM_BUILD_ROOT%{_libdir}/xorg/modules/extensions/nvidia
 ln -s libglx.so.%{version} $RPM_BUILD_ROOT%{_libdir}/xorg/modules/extensions/nvidia/libglx.so
 install -p nvidia_drv.so $RPM_BUILD_ROOT%{_libdir}/xorg/modules/drivers/nvidia_drv.so.%{version}
 ln -s nvidia_drv.so.%{version} $RPM_BUILD_ROOT%{_libdir}/xorg/modules/drivers/nvidia_drv.so
 install -p libnvidia-wfb.so.%{version} $RPM_BUILD_ROOT%{_libdir}/xorg/modules/extensions/nvidia
 ln -s libnvidia-wfb.so.1 $RPM_BUILD_ROOT%{_libdir}/xorg/modules/extensions/nvidia/libnvidia-wfb.so
+%endif
 
 /sbin/ldconfig -n $RPM_BUILD_ROOT%{_libdir}/nvidia
 /sbin/ldconfig -n $RPM_BUILD_ROOT%{_libdir}/xorg/modules/extensions/nvidia
@@ -350,8 +368,13 @@ cp -p gl*.h $RPM_BUILD_ROOT%{_includedir}/GL
 
 ln -sf libvdpau_nvidia.so.%{version} $RPM_BUILD_ROOT%{_libdir}/vdpau/libvdpau_nvidia.so.1
 
+%ifarch %{x8664}
 echo %{_libdir}/nvidia >$RPM_BUILD_ROOT%{_sysconfdir}/ld.so.conf.d/nvidia64.conf
 echo %{_libdir}/vdpau >>$RPM_BUILD_ROOT%{_sysconfdir}/ld.so.conf.d/nvidia64.conf
+%else
+echo %{_libdir}/nvidia >$RPM_BUILD_ROOT%{_sysconfdir}/ld.so.conf.d/nvidia.conf
+echo %{_libdir}/vdpau >>$RPM_BUILD_ROOT%{_sysconfdir}/ld.so.conf.d/nvidia.conf
+%endif
 
 # OpenGL ABI for Linux compatibility
 %if %{with glvnd}
@@ -373,7 +396,9 @@ ln -sf libEGL_nvidia.so.%{version} $RPM_BUILD_ROOT%{_libdir}/nvidia/libEGL_nvidi
 ln -sf libGLESv1_CM_nvidia.so.%{version} $RPM_BUILD_ROOT%{_libdir}/nvidia/libGLESv1_CM_nvidia.so.1
 ln -sf libGLESv2_nvidia.so.%{version} $RPM_BUILD_ROOT%{_libdir}/nvidia/libGLESv2_nvidia.so.2
 
+%ifarch %{x8664}
 install -p 10_nvidia.json $RPM_BUILD_ROOT%{_datadir}/glvnd/egl_vendor.d
+%endif
 %else
 ln -sf libGL.so.%{version} $RPM_BUILD_ROOT%{_libdir}/nvidia/libGL.so.1
 ln -sf libGL.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libGL.so
@@ -381,12 +406,16 @@ ln -sf libGL.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libGL.so
 ln -sf libcuda.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libcuda.so
 ln -sf libnvcuvid.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libnvcuvid.so
 
+%ifarch %{x8664}
 sed 's!__NV_VK_ICD__!%{vulkan_lib}!g' nvidia_icd.json.template > $RPM_BUILD_ROOT%{_datadir}/vulkan/icd.d/nvidia_icd.json
 %endif
+%endif
 
+%ifarch %{x8664}
 %if %{with kernel}
 install -d $RPM_BUILD_ROOT
 cp -a installed/* $RPM_BUILD_ROOT
+%endif
 %endif
 
 install -d $RPM_BUILD_ROOT%{_pkgconfigdir}
@@ -411,6 +440,7 @@ EOF
 %postun	libs -p /sbin/ldconfig
 
 %if %{with userspace}
+%ifarch %{x8664}
 %files
 %defattr(644,root,root,755)
 %doc LICENSE NVIDIA_Changelog README.txt
@@ -428,12 +458,15 @@ EOF
 %dir %{_datadir}/nvidia
 %{_datadir}/nvidia/nvidia-application-profiles-%{version}-key-documentation
 %{_datadir}/nvidia/nvidia-application-profiles-%{version}-rc
+%endif
 
 %files libs
 %defattr(644,root,root,755)
+%ifarch %{x8664}
 %dir %{_sysconfdir}/OpenCL
 %dir %{_sysconfdir}/OpenCL/vendors
 %{_sysconfdir}/OpenCL/vendors/nvidia.icd
+%endif}
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/ld.so.conf.d/nvidia*.conf
 %dir %{_libdir}/nvidia
 %if %{with glvnd}
@@ -459,9 +492,11 @@ EOF
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libGLX_indirect.so.0
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libGLX_nvidia.so.0
 %attr(755,root,root) %{_libdir}/nvidia/libGLX_nvidia.so.*.*
+%ifarch %{x8664}
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-egl-wayland.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-egl-wayland.so.1
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-eglcore.so.*.*
+%endif
 %else
 %attr(755,root,root) %{_libdir}/nvidia/libGL.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libGL.so.1
@@ -472,8 +507,10 @@ EOF
 %attr(755,root,root) %{_libdir}/nvidia/libnvcuvid.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvcuvid.so.1
 %attr(755,root,root) %{_libdir}/nvidia/libnvcuvid.so
+%ifarch %{x8664}
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-cfg.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-cfg.so.1
+%endif
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-compiler.so.*.*
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-encode.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-encode.so.1
@@ -494,10 +531,12 @@ EOF
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-tls.so.*.*
 %attr(755,root,root) %{_libdir}/vdpau/libvdpau_nvidia.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/vdpau/libvdpau_nvidia.so.1
+%ifarch %{x8664}
 %if %{with glvnd}
 %{_datadir}/glvnd/egl_vendor.d/10_nvidia.json
 %endif
 %{_datadir}/vulkan/icd.d/nvidia_icd.json
+%endif
 
 %files devel
 %defattr(644,root,root,755)
@@ -524,6 +563,7 @@ EOF
 %defattr(644,root,root,755)
 %doc html/*
 
+%ifarch %{x8664}
 %files progs
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/nvidia-bug-report.sh
@@ -540,4 +580,6 @@ EOF
 %{_mandir}/man1/nvidia-settings.1*
 %{_desktopdir}/nvidia-settings.desktop
 %{_pixmapsdir}/nvidia-settings.png
+%endif
+%endif
 %endif
