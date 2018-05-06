@@ -70,7 +70,7 @@ Provides:	xorg-xserver-module(glx)
 Obsoletes:	XFree86-driver-nvidia
 Obsoletes:	XFree86-nvidia
 Conflicts:	XFree86-OpenGL-devel <= 4.2.0-3
-ExclusiveArch:	%{ix86} %{x8664}
+ExclusiveArch:	%{?with_userspace:%{ix86}} %{x8664}
 BuildRoot:	%{tmpdir}/%{pname}-%{version}-root-%(id -u -n)
 
 %define		_noautoreqdep	libGL.so.1 libnvcuvid.so
