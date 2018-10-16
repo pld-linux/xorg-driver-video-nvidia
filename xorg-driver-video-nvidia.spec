@@ -40,19 +40,18 @@ Summary(hu.UTF-8):	Linux meghajtók nVidia GeForce/Quadro chipekhez
 Summary(pl.UTF-8):	Sterowniki do kart graficznych nVidia GeForce/Quadro
 Name:		%{pname}%{?_pld_builder:%{?with_kernel:-kernel}}%{_alt_kernel}
 # when updating version here, keep nvidia-settings.spec in sync as well
-Version:	396.54
+Version:	410.66
 Release:	%{rel}%{?_pld_builder:%{?with_kernel:@%{_kernel_ver_str}}}
 Epoch:		1
 License:	nVidia Binary
 Group:		X11
 Source0:	http://us.download.nvidia.com/XFree86/Linux-x86_64/%{version}/NVIDIA-Linux-x86_64-%{version}.run
-# Source0-md5:	195afa93d400bdbb9361ede6cef95143
+# Source0-md5:	91969d7ae791a17d37689f81a02c4b56
 Source2:	%{pname}-xinitrc.sh
 Source3:	gl.pc.in
 Source4:	10-nvidia.conf
 Source5:	10-nvidia-modules.conf
-Patch0:		X11-driver-nvidia-GL.patch
-Patch1:		X11-driver-nvidia-desktop.patch
+Patch0:		X11-driver-nvidia-desktop.patch
 URL:		http://www.nvidia.com/object/unix.html
 BuildRequires:	rpmbuild(macros) >= 1.701
 %{?with_kernel:%{expand:%buildrequires_kernel kernel%%{_alt_kernel}-module-build >= 3:2.6.20.2}}
@@ -260,7 +259,6 @@ rm -rf NVIDIA-Linux-x86_64-%{version}
 /bin/sh %{SOURCE0} --extract-only
 %setup -qDT -n NVIDIA-Linux-x86_64-%{version}
 %patch0 -p1
-%patch1 -p1
 echo 'EXTRA_CFLAGS += -Wno-pointer-arith -Wno-sign-compare -Wno-unused' >> kernel/Makefile.kbuild
 
 %build
@@ -273,7 +271,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %if %{with userspace}
 install -d $RPM_BUILD_ROOT%{_libdir}/{nvidia,xorg/modules/{drivers,extensions/nvidia}} \
-	$RPM_BUILD_ROOT{%{_includedir}/GL,%{_libdir}/vdpau,%{_bindir},%{_mandir}/man1} \
+	$RPM_BUILD_ROOT{%{_libdir}/vdpau,%{_bindir},%{_mandir}/man1} \
 	$RPM_BUILD_ROOT{%{_desktopdir},%{_pixmapsdir},/etc/X11/xinit/xinitrc.d} \
 	$RPM_BUILD_ROOT%{_sysconfdir}/{OpenCL/vendors,ld.so.conf.d,X11/xorg.conf.d} \
 	$RPM_BUILD_ROOT%{_datadir}/{glvnd/egl_vendor.d,nvidia,vulkan/icd.d}
@@ -323,7 +321,7 @@ for f in \
 	%{srcdir}/libGLESv1_CM_nvidia.so.%{version}	\
 	%{srcdir}/libGLESv2_nvidia.so.%{version}		\
 %ifarch %{x8664}
-	%{srcdir}/libnvidia-egl-wayland.so.1.0.3		\
+	%{srcdir}/libnvidia-egl-wayland.so.1.1.0		\
 	%{srcdir}/libnvidia-eglcore.so.%{version}		\
 %endif
 %else
@@ -353,8 +351,8 @@ done
 install -p %{srcdir}/libvdpau_nvidia.so.%{version} $RPM_BUILD_ROOT%{_libdir}/vdpau
 
 %ifarch %{x8664}
-install -p libglx.so.%{version} $RPM_BUILD_ROOT%{_libdir}/xorg/modules/extensions/nvidia
-ln -s libglx.so.%{version} $RPM_BUILD_ROOT%{_libdir}/xorg/modules/extensions/nvidia/libglx.so
+install -p libglxserver_nvidia.so.%{version} $RPM_BUILD_ROOT%{_libdir}/xorg/modules/extensions/nvidia
+ln -s libglxserver_nvidia.so.%{version} $RPM_BUILD_ROOT%{_libdir}/xorg/modules/extensions/nvidia/libglxserver_nvidia.so
 install -p nvidia_drv.so $RPM_BUILD_ROOT%{_libdir}/xorg/modules/drivers/nvidia_drv.so.%{version}
 ln -s nvidia_drv.so.%{version} $RPM_BUILD_ROOT%{_libdir}/xorg/modules/drivers/nvidia_drv.so
 install -p libnvidia-wfb.so.%{version} $RPM_BUILD_ROOT%{_libdir}/xorg/modules/extensions/nvidia
@@ -363,8 +361,6 @@ ln -s libnvidia-wfb.so.1 $RPM_BUILD_ROOT%{_libdir}/xorg/modules/extensions/nvidi
 
 /sbin/ldconfig -n $RPM_BUILD_ROOT%{_libdir}/nvidia
 /sbin/ldconfig -n $RPM_BUILD_ROOT%{_libdir}/xorg/modules/extensions/nvidia
-
-cp -p gl*.h $RPM_BUILD_ROOT%{_includedir}/GL
 
 ln -sf libvdpau_nvidia.so.%{version} $RPM_BUILD_ROOT%{_libdir}/vdpau/libvdpau_nvidia.so.1
 
@@ -422,7 +418,6 @@ install -d $RPM_BUILD_ROOT%{_pkgconfigdir}
 sed -e '
 	s|@@prefix@@|%{_prefix}|g;
 	s|@@libdir@@|%{_libdir}|g;
-	s|@@includedir@@|%{_includedir}|g;
 	s|@@version@@|%{version}|g' < %{SOURCE3} \
 	> $RPM_BUILD_ROOT%{_pkgconfigdir}/gl.pc
 
@@ -448,8 +443,8 @@ EOF
 %attr(755,root,root) %{_libdir}/xorg/modules/extensions/nvidia/libnvidia-wfb.so.*.*
 %attr(755,root,root) %{_libdir}/xorg/modules/extensions/nvidia/libnvidia-wfb.so.1
 %attr(755,root,root) %{_libdir}/xorg/modules/extensions/nvidia/libnvidia-wfb.so
-%attr(755,root,root) %{_libdir}/xorg/modules/extensions/nvidia/libglx.so.*
-%attr(755,root,root) %{_libdir}/xorg/modules/extensions/nvidia/libglx.so
+%attr(755,root,root) %{_libdir}/xorg/modules/extensions/nvidia/libglxserver_nvidia.so.*
+%attr(755,root,root) %{_libdir}/xorg/modules/extensions/nvidia/libglxserver_nvidia.so
 %attr(755,root,root) %{_libdir}/xorg/modules/drivers/nvidia_drv.so.*
 %attr(755,root,root) %{_libdir}/xorg/modules/drivers/nvidia_drv.so
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/X11/xorg.conf.d/10-nvidia.conf
@@ -540,11 +535,6 @@ EOF
 
 %files devel
 %defattr(644,root,root,755)
-%dir %{_includedir}/GL
-%{_includedir}/GL/gl.h
-%{_includedir}/GL/glext.h
-%{_includedir}/GL/glx.h
-%{_includedir}/GL/glxext.h
 %if %{with glvnd}
 %if %{without system_libglvnd}
 %attr(755,root,root) %{_libdir}/nvidia/libGL.so
