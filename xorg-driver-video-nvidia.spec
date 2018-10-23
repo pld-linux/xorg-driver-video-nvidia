@@ -330,7 +330,10 @@ for f in \
 	%{srcdir}/libcuda.so.%{version}			\
 	%{srcdir}/libnvcuvid.so.%{version}		\
 %ifarch %{x8664}
+	%{srcdir}/libnvidia-cbl.so.%{version}	\
 	%{srcdir}/libnvidia-cfg.so.%{version}		\
+	%{srcdir}/libnvidia-rtcore.so.%{version}	\
+	%{srcdir}/libnvoptix.so.%{version}	\
 %endif
 	%{srcdir}/libnvidia-compiler.so.%{version}	\
 	%{srcdir}/libnvidia-encode.so.%{version}		\
@@ -503,8 +506,12 @@ EOF
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvcuvid.so.1
 %attr(755,root,root) %{_libdir}/nvidia/libnvcuvid.so
 %ifarch %{x8664}
+%attr(755,root,root) %{_libdir}/nvidia/libnvidia-cbl.so.*.*
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-cfg.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-cfg.so.1
+%attr(755,root,root) %{_libdir}/nvidia/libnvidia-rtcore.so.*.*
+%attr(755,root,root) %{_libdir}/nvidia/libnvoptix.so.*.*
+%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvoptix.so.1
 %endif
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-compiler.so.*.*
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-encode.so.*.*
