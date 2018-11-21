@@ -40,13 +40,13 @@ Summary(hu.UTF-8):	Linux meghajtók nVidia GeForce/Quadro chipekhez
 Summary(pl.UTF-8):	Sterowniki do kart graficznych nVidia GeForce/Quadro
 Name:		%{pname}%{?_pld_builder:%{?with_kernel:-kernel}}%{_alt_kernel}
 # when updating version here, keep nvidia-settings.spec in sync as well
-Version:	410.78
+Version:	415.18
 Release:	%{rel}%{?_pld_builder:%{?with_kernel:@%{_kernel_ver_str}}}
 Epoch:		1
 License:	nVidia Binary
 Group:		X11
 Source0:	http://us.download.nvidia.com/XFree86/Linux-x86_64/%{version}/NVIDIA-Linux-x86_64-%{version}.run
-# Source0-md5:	5486d21e82fe16b88f43363981dc09d4
+# Source0-md5:	0928fa28b4805b95f41e6b74a463823c
 Source2:	%{pname}-xinitrc.sh
 Source3:	gl.pc.in
 Source4:	10-nvidia.conf
@@ -54,13 +54,13 @@ Source5:	10-nvidia-modules.conf
 Patch0:		X11-driver-nvidia-desktop.patch
 URL:		http://www.nvidia.com/object/unix.html
 BuildRequires:	rpmbuild(macros) >= 1.701
-%{?with_kernel:%{expand:%buildrequires_kernel kernel%%{_alt_kernel}-module-build >= 3:2.6.20.2}}
+%{?with_kernel:%{expand:%buildrequires_kernel kernel%%{_alt_kernel}-module-build >= 3:2.6.32}}
 BuildRequires:	sed >= 4.0
 BuildConflicts:	XFree86-nvidia
 Requires:	%{pname}-libs = %{epoch}:%{version}-%{rel}
 Requires:	xorg-xserver-server
 Requires:	xorg-xserver-server(videodrv-abi) <= 24.0
-Requires:	xorg-xserver-server(videodrv-abi) >= 2.0
+Requires:	xorg-xserver-server(videodrv-abi) >= 4.0
 Provides:	ocl-icd(nvidia)
 Provides:	ocl-icd-driver
 Provides:	vulkan(icd) = 1.1.82
@@ -346,7 +346,7 @@ for f in \
 	%{srcdir}/libnvidia-ml.so.%{version}		\
 	%{srcdir}/libnvidia-opencl.so.%{version}		\
 	%{srcdir}/libnvidia-ptxjitcompiler.so.%{version}	\
-	%{srcdir}/tls/libnvidia-tls.so.%{version}		\
+	%{srcdir}/libnvidia-tls.so.%{version}		\
 ; do
 	install -p $f $RPM_BUILD_ROOT%{_libdir}/nvidia
 done
