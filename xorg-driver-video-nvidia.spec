@@ -40,19 +40,18 @@ Summary(hu.UTF-8):	Linux meghajtók nVidia GeForce/Quadro chipekhez
 Summary(pl.UTF-8):	Sterowniki do kart graficznych nVidia GeForce/Quadro
 Name:		%{pname}%{?_pld_builder:%{?with_kernel:-kernel}}%{_alt_kernel}
 # when updating version here, keep nvidia-settings.spec in sync as well
-Version:	415.27
+Version:	418.43
 Release:	%{rel}%{?_pld_builder:%{?with_kernel:@%{_kernel_ver_str}}}
 Epoch:		1
 License:	nVidia Binary
 Group:		X11
 Source0:	http://us.download.nvidia.com/XFree86/Linux-x86_64/%{version}/NVIDIA-Linux-x86_64-%{version}.run
-# Source0-md5:	f4777691c4673c808d82e37695367f6d
+# Source0-md5:	33d6f5f282f0ae9b919a6da6a5bd346a
 Source2:	%{pname}-xinitrc.sh
 Source3:	gl.pc.in
 Source4:	10-nvidia.conf
 Source5:	10-nvidia-modules.conf
 Patch0:		X11-driver-nvidia-desktop.patch
-Patch1:		kernel-4.4.169.patch
 URL:		http://www.nvidia.com/object/unix.html
 BuildRequires:	rpmbuild(macros) >= 1.701
 %{?with_kernel:%{expand:%buildrequires_kernel kernel%%{_alt_kernel}-module-build >= 3:2.6.32}}
@@ -260,7 +259,6 @@ rm -rf NVIDIA-Linux-x86_64-%{version}
 /bin/sh %{SOURCE0} --extract-only
 %setup -qDT -n NVIDIA-Linux-x86_64-%{version}
 %patch0 -p1
-%patch1 -p1
 echo 'EXTRA_CFLAGS += -Wno-pointer-arith -Wno-sign-compare -Wno-unused' >> kernel/Makefile.kbuild
 
 %build
@@ -323,7 +321,7 @@ for f in \
 	%{srcdir}/libGLESv1_CM_nvidia.so.%{version}	\
 	%{srcdir}/libGLESv2_nvidia.so.%{version}		\
 %ifarch %{x8664}
-	%{srcdir}/libnvidia-egl-wayland.so.1.1.0		\
+	%{srcdir}/libnvidia-egl-wayland.so.1.1.2		\
 	%{srcdir}/libnvidia-eglcore.so.%{version}		\
 %endif
 %else
@@ -360,8 +358,6 @@ install -p libglxserver_nvidia.so.%{version} $RPM_BUILD_ROOT%{_libdir}/xorg/modu
 ln -s libglxserver_nvidia.so.%{version} $RPM_BUILD_ROOT%{_libdir}/xorg/modules/extensions/nvidia/libglxserver_nvidia.so
 install -p nvidia_drv.so $RPM_BUILD_ROOT%{_libdir}/xorg/modules/drivers/nvidia_drv.so.%{version}
 ln -s nvidia_drv.so.%{version} $RPM_BUILD_ROOT%{_libdir}/xorg/modules/drivers/nvidia_drv.so
-install -p libnvidia-wfb.so.%{version} $RPM_BUILD_ROOT%{_libdir}/xorg/modules/extensions/nvidia
-ln -s libnvidia-wfb.so.1 $RPM_BUILD_ROOT%{_libdir}/xorg/modules/extensions/nvidia/libnvidia-wfb.so
 %endif
 
 /sbin/ldconfig -n $RPM_BUILD_ROOT%{_libdir}/nvidia
@@ -445,9 +441,6 @@ EOF
 %defattr(644,root,root,755)
 %doc LICENSE NVIDIA_Changelog README.txt
 %dir %{_libdir}/xorg/modules/extensions/nvidia
-%attr(755,root,root) %{_libdir}/xorg/modules/extensions/nvidia/libnvidia-wfb.so.*.*
-%attr(755,root,root) %{_libdir}/xorg/modules/extensions/nvidia/libnvidia-wfb.so.1
-%attr(755,root,root) %{_libdir}/xorg/modules/extensions/nvidia/libnvidia-wfb.so
 %attr(755,root,root) %{_libdir}/xorg/modules/extensions/nvidia/libglxserver_nvidia.so.*
 %attr(755,root,root) %{_libdir}/xorg/modules/extensions/nvidia/libglxserver_nvidia.so
 %attr(755,root,root) %{_libdir}/xorg/modules/drivers/nvidia_drv.so.*
