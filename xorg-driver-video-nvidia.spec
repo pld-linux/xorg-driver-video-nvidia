@@ -4,8 +4,8 @@
 # - kernel-drm is required on never kernels. driver for kernel-longterm not requires drm
 #
 # Conditional build:
-%bcond_with	glvnd		# with GL vendor neutral libs
-%bcond_without	system_libglvnd	# do not use system libglvnd
+%bcond_without	glvnd		# without GL vendor neutral libs
+%bcond_with	system_libglvnd	# do not use system libglvnd
 %bcond_without	kernel		# without kernel packages
 %bcond_without	userspace	# don't build userspace programs
 %bcond_with	settings	# package nvidia-settings here (GPL version of same packaged from nvidia-settings.spec)
@@ -33,7 +33,7 @@ exit 1
 
 %define		no_install_post_check_so 1
 
-%define		rel	1
+%define		rel	2
 %define		pname	xorg-driver-video-nvidia
 Summary:	Linux Drivers for nVidia GeForce/Quadro Chips
 Summary(hu.UTF-8):	Linux meghajtók nVidia GeForce/Quadro chipekhez
