@@ -4,7 +4,6 @@
 # - kernel-drm is required on never kernels. driver for kernel-longterm not requires drm
 #
 # Conditional build:
-%bcond_without	glvnd		# without GL vendor neutral libs
 %bcond_with	system_libglvnd	# do not use system libglvnd
 %bcond_without	kernel		# without kernel packages
 %bcond_without	userspace	# don't build userspace programs
@@ -18,12 +17,6 @@
 %if 0%{?_pld_builder:1} && %{with kernel} && %{with userspace}
 %{error:kernel and userspace cannot be built at the same time on PLD builders}
 exit 1
-%endif
-
-%if %{with glvnd}
-%define		vulkan_lib	libGLX_nvidia.so.0
-%else
-%define		vulkan_lib	libGL.so.1
 %endif
 
 %if %{without userspace}
@@ -116,7 +109,7 @@ Summary:	OpenGL (GL and GLX) Nvidia libraries
 Summary(pl.UTF-8):	Biblioteki OpenGL (GL i GLX) Nvidia
 Group:		X11/Development/Libraries
 Requires(post,postun):	/sbin/ldconfig
-%if %{with glvnd} && %{with system_libglvnd}
+%if %{with system_libglvnd}
 Requires:	libglvnd
 Requires:	libglvnd-libGL
 Requires:	libglvnd-libGLES
@@ -306,7 +299,6 @@ install -p nvidia-application-profiles-%{version}-rc $RPM_BUILD_ROOT%{_datadir}/
 %endif
 
 for f in \
-%if %{with glvnd}
 %if %{without system_libglvnd}
 	%{srcdir}/libGL.so.1.7.0				\
 	%{srcdir}/libGLX.so.0				\
@@ -323,9 +315,6 @@ for f in \
 %ifarch %{x8664}
 	%{srcdir}/libnvidia-egl-wayland.so.1.1.3		\
 	%{srcdir}/libnvidia-eglcore.so.%{version}		\
-%endif
-%else
-	%{srcdir}/libGL.so.%{version}			\
 %endif
 	%{srcdir}/libcuda.so.%{version}			\
 	%{srcdir}/libnvcuvid.so.%{version}		\
@@ -374,7 +363,6 @@ echo %{_libdir}/vdpau >>$RPM_BUILD_ROOT%{_sysconfdir}/ld.so.conf.d/nvidia.conf
 %endif
 
 # OpenGL ABI for Linux compatibility
-%if %{with glvnd}
 %if %{without system_libglvnd}
 ln -sf libGL.so.1.7.0 $RPM_BUILD_ROOT%{_libdir}/nvidia/libGL.so.1
 ln -sf libGL.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libGL.so
@@ -395,10 +383,6 @@ ln -sf libGLESv2_nvidia.so.%{version} $RPM_BUILD_ROOT%{_libdir}/nvidia/libGLESv2
 
 %ifarch %{x8664}
 install -p 10_nvidia.json $RPM_BUILD_ROOT%{_datadir}/glvnd/egl_vendor.d
-%endif
-%else
-ln -sf libGL.so.%{version} $RPM_BUILD_ROOT%{_libdir}/nvidia/libGL.so.1
-ln -sf libGL.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libGL.so
 %endif
 ln -sf libcuda.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libcuda.so
 ln -sf libnvcuvid.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libnvcuvid.so
@@ -462,7 +446,6 @@ EOF
 %endif}
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/ld.so.conf.d/nvidia*.conf
 %dir %{_libdir}/nvidia
-%if %{with glvnd}
 %if %{without system_libglvnd}
 %attr(755,root,root) %{_libdir}/nvidia/libGL.so.1.7.0
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libGL.so.1
@@ -489,10 +472,6 @@ EOF
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-egl-wayland.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-egl-wayland.so.1
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-eglcore.so.*.*
-%endif
-%else
-%attr(755,root,root) %{_libdir}/nvidia/libGL.so.*.*
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libGL.so.1
 %endif
 %attr(755,root,root) %{_libdir}/nvidia/libcuda.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libcuda.so.1
@@ -529,15 +508,12 @@ EOF
 %attr(755,root,root) %{_libdir}/vdpau/libvdpau_nvidia.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/vdpau/libvdpau_nvidia.so.1
 %ifarch %{x8664}
-%if %{with glvnd}
 %{_datadir}/glvnd/egl_vendor.d/10_nvidia.json
-%endif
 %{_datadir}/vulkan/icd.d/nvidia_icd.json
 %endif
 
 %files devel
 %defattr(644,root,root,755)
-%if %{with glvnd}
 %if %{without system_libglvnd}
 %attr(755,root,root) %{_libdir}/nvidia/libGL.so
 %attr(755,root,root) %{_libdir}/nvidia/libGLX.so
@@ -545,9 +521,6 @@ EOF
 %attr(755,root,root) %{_libdir}/nvidia/libGLESv1_CM.so
 %attr(755,root,root) %{_libdir}/nvidia/libGLESv2.so
 %attr(755,root,root) %{_libdir}/nvidia/libEGL.so
-%endif
-%else
-%attr(755,root,root) %{_libdir}/nvidia/libGL.so
 %endif
 %{_pkgconfigdir}/gl.pc
 
