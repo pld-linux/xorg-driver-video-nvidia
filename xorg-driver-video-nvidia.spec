@@ -33,13 +33,13 @@ Summary(hu.UTF-8):	Linux meghajtók nVidia GeForce/Quadro chipekhez
 Summary(pl.UTF-8):	Sterowniki do kart graficznych nVidia GeForce/Quadro
 Name:		%{pname}%{?_pld_builder:%{?with_kernel:-kernel}}%{_alt_kernel}
 # when updating version here, keep nvidia-settings.spec in sync as well
-Version:	435.21
+Version:	440.31
 Release:	%{rel}%{?_pld_builder:%{?with_kernel:@%{_kernel_ver_str}}}
 Epoch:		1
 License:	nVidia Binary
 Group:		X11
 Source0:	http://us.download.nvidia.com/XFree86/Linux-x86_64/%{version}/NVIDIA-Linux-x86_64-%{version}.run
-# Source0-md5:	050acb0aecc93ba15d1fc609ee82bebe
+# Source0-md5:	dc33e07e1b3ba11a14daf226f5d8cf7b
 Source2:	%{pname}-xinitrc.sh
 Source3:	gl.pc.in
 Source4:	10-nvidia.conf
@@ -56,7 +56,7 @@ Requires:	xorg-xserver-server(videodrv-abi) <= 24.0
 Requires:	xorg-xserver-server(videodrv-abi) >= 4.0
 Provides:	ocl-icd(nvidia)
 Provides:	ocl-icd-driver
-Provides:	vulkan(icd) = 1.1.109
+Provides:	vulkan(icd) = 1.1.119
 Provides:	xorg-driver-video
 Provides:	xorg-xserver-module(glx)
 Obsoletes:	XFree86-driver-nvidia
@@ -313,7 +313,7 @@ for f in \
 	%{srcdir}/libGLESv1_CM_nvidia.so.%{version}	\
 	%{srcdir}/libGLESv2_nvidia.so.%{version}		\
 %ifarch %{x8664}
-	%{srcdir}/libnvidia-egl-wayland.so.1.1.3		\
+	%{srcdir}/libnvidia-egl-wayland.so.1.1.4		\
 	%{srcdir}/libnvidia-eglcore.so.%{version}		\
 %endif
 	%{srcdir}/libcuda.so.%{version}			\
