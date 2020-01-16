@@ -52,7 +52,7 @@ BuildRequires:	sed >= 4.0
 BuildConflicts:	XFree86-nvidia
 Requires:	%{pname}-libs = %{epoch}:%{version}-%{rel}
 Requires:	xorg-xserver-server
-Requires:	xorg-xserver-server(videodrv-abi) <= 24.0
+Requires:	xorg-xserver-server(videodrv-abi) <= 24.1
 Requires:	xorg-xserver-server(videodrv-abi) >= 4.0
 Provides:	ocl-icd(nvidia)
 Provides:	ocl-icd-driver
