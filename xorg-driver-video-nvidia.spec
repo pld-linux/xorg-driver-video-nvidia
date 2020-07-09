@@ -33,13 +33,13 @@ Summary(hu.UTF-8):	Linux meghajtók nVidia GeForce/Quadro chipekhez
 Summary(pl.UTF-8):	Sterowniki do kart graficznych nVidia GeForce/Quadro
 Name:		%{pname}%{?_pld_builder:%{?with_kernel:-kernel}}%{_alt_kernel}
 # when updating version here, keep nvidia-settings.spec in sync as well
-Version:	440.100
+Version:	450.57
 Release:	%{rel}%{?_pld_builder:%{?with_kernel:@%{_kernel_ver_str}}}
 Epoch:		1
 License:	nVidia Binary
 Group:		X11
 Source0:	http://us.download.nvidia.com/XFree86/Linux-x86_64/%{version}/NVIDIA-Linux-x86_64-%{version}.run
-# Source0-md5:	7b99bcd2807ecd37af60d29de7bc30c2
+# Source0-md5:	f51c0f6d5b0d6075367366e01919aeb6
 Source2:	%{pname}-xinitrc.sh
 Source3:	gl.pc.in
 Source4:	10-nvidia.conf
@@ -316,12 +316,13 @@ for f in \
 %ifarch %{x8664}
 	%{srcdir}/libnvidia-cbl.so.%{version}	\
 	%{srcdir}/libnvidia-cfg.so.%{version}		\
+	%{srcdir}/libnvidia-ngx.so.%{version}		\
 	%{srcdir}/libnvidia-rtcore.so.%{version}	\
 	%{srcdir}/libnvoptix.so.%{version}	\
 %endif
+	%{srcdir}/libnvidia-allocator.so.%{version}	\
 	%{srcdir}/libnvidia-compiler.so.%{version}	\
 	%{srcdir}/libnvidia-encode.so.%{version}		\
-	%{srcdir}/libnvidia-fatbinaryloader.so.%{version}	\
 	%{srcdir}/libnvidia-fbc.so.%{version}	\
 	%{srcdir}/libnvidia-glcore.so.%{version}		\
 	%{srcdir}/libnvidia-glsi.so.%{version}		\
@@ -329,6 +330,7 @@ for f in \
 	%{srcdir}/libnvidia-ifr.so.%{version}		\
 	%{srcdir}/libnvidia-ml.so.%{version}		\
 	%{srcdir}/libnvidia-opencl.so.%{version}		\
+	%{srcdir}/libnvidia-opticalflow.so.%{version}		\
 	%{srcdir}/libnvidia-ptxjitcompiler.so.%{version}	\
 	%{srcdir}/libnvidia-tls.so.%{version}		\
 ; do
@@ -478,14 +480,17 @@ EOF
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-cbl.so.*.*
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-cfg.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-cfg.so.1
+%attr(755,root,root) %{_libdir}/nvidia/libnvidia-ngx.so.*.*
+%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-ngx.so.1
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-rtcore.so.*.*
 %attr(755,root,root) %{_libdir}/nvidia/libnvoptix.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvoptix.so.1
 %endif
+%attr(755,root,root) %{_libdir}/nvidia/libnvidia-allocator.so.*.*
+%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-allocator.so.1
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-compiler.so.*.*
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-encode.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-encode.so.1
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-fatbinaryloader.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-fbc.so.1
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-fbc.so.*.*
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-glcore.so.*.*
@@ -493,12 +498,14 @@ EOF
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-glvkspirv.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-ifr.so.1
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-ifr.so.*.*
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-ptxjitcompiler.so.1
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-ml.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-ml.so.1
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-opencl.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-opencl.so.1
+%attr(755,root,root) %{_libdir}/nvidia/libnvidia-opticalflow.so.*.*
+%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-opticalflow.so.1
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-ptxjitcompiler.so.*.*
+%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-ptxjitcompiler.so.1
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-tls.so.*.*
 %attr(755,root,root) %{_libdir}/vdpau/libvdpau_nvidia.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/vdpau/libvdpau_nvidia.so.1
