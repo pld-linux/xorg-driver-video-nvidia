@@ -33,13 +33,13 @@ Summary(hu.UTF-8):	Linux meghajtók nVidia GeForce/Quadro chipekhez
 Summary(pl.UTF-8):	Sterowniki do kart graficznych nVidia GeForce/Quadro
 Name:		%{pname}%{?_pld_builder:%{?with_kernel:-kernel}}%{_alt_kernel}
 # when updating version here, keep nvidia-settings.spec in sync as well
-Version:	450.80.02
+Version:	455.28
 Release:	%{rel}%{?_pld_builder:%{?with_kernel:@%{_kernel_ver_str}}}
 Epoch:		1
 License:	nVidia Binary
 Group:		X11
 Source0:	http://us.download.nvidia.com/XFree86/Linux-x86_64/%{version}/NVIDIA-Linux-x86_64-%{version}.run
-# Source0-md5:	c68b3500fb5ceb17a0fcebcbb143dad8
+# Source0-md5:	961169e263b2b9941c5c6f9b13d48e4c
 Source2:	%{pname}-xinitrc.sh
 Source3:	gl.pc.in
 Source4:	10-nvidia.conf
@@ -308,7 +308,7 @@ for f in \
 	%{srcdir}/libGLESv1_CM_nvidia.so.%{version}	\
 	%{srcdir}/libGLESv2_nvidia.so.%{version}		\
 %ifarch %{x8664}
-	%{srcdir}/libnvidia-egl-wayland.so.1.1.4		\
+	%{srcdir}/libnvidia-egl-wayland.so.1.1.5		\
 	%{srcdir}/libnvidia-eglcore.so.%{version}		\
 %endif
 	%{srcdir}/libcuda.so.%{version}			\
