@@ -46,7 +46,7 @@ Source4:	10-nvidia.conf
 Source5:	10-nvidia-modules.conf
 Patch0:		X11-driver-nvidia-desktop.patch
 URL:		http://www.nvidia.com/object/unix.html
-BuildRequires:	rpmbuild(macros) >= 1.701
+BuildRequires:	rpmbuild(macros) >= 1.752
 %{?with_kernel:%{expand:%buildrequires_kernel kernel%%{_alt_kernel}-module-build >= 3:2.6.32}}
 BuildRequires:	sed >= 4.0
 BuildConflicts:	XFree86-nvidia
@@ -155,9 +155,7 @@ firmy NVIDIA.
 %package doc
 Summary:	Documentation for NVIDIA Graphics Driver
 Group:		Documentation
-%if "%{_rpmversion}" >= "5"
-BuildArch:	noarch
-%endif
+%{?noarchpackage}
 
 %description doc
 NVIDIA Accelerated Linux Graphics Driver README and Installation
