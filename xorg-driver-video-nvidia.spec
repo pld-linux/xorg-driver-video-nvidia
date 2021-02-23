@@ -436,7 +436,7 @@ EOF
 %dir %{_sysconfdir}/OpenCL
 %dir %{_sysconfdir}/OpenCL/vendors
 %{_sysconfdir}/OpenCL/vendors/nvidia.icd
-%endif}
+%endif
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/ld.so.conf.d/nvidia*.conf
 %dir %{_libdir}/nvidia
 %if %{without system_libglvnd}
