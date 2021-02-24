@@ -19,11 +19,6 @@
 exit 1
 %endif
 
-%if %{without userspace}
-# nothing to be placed to debuginfo package
-%define		_enable_debug_packages	0
-%endif
-
 %define		no_install_post_check_so 1
 
 %define		rel	2
@@ -64,6 +59,8 @@ Obsoletes:	XFree86-nvidia
 Conflicts:	XFree86-OpenGL-devel <= 4.2.0-3
 ExclusiveArch:	%{?with_userspace:%{ix86}} %{x8664}
 BuildRoot:	%{tmpdir}/%{pname}-%{version}-root-%(id -u -n)
+
+%define		_enable_debug_packages	0
 
 %define		_noautoreqdep	libGL.so.1 libnvcuvid.so
 # libnvidia-encode.so.*.* links with libnvcuvid.so instead of libnvcuvid.so.1
