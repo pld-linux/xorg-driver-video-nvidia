@@ -26,7 +26,7 @@ exit 1
 
 %define		no_install_post_check_so 1
 
-%define		rel	1
+%define		rel	2
 %define		pname	xorg-driver-video-nvidia
 Summary:	Linux Drivers for nVidia GeForce/Quadro Chips
 Summary(hu.UTF-8):	Linux meghajtók nVidia GeForce/Quadro chipekhez
@@ -179,7 +179,6 @@ Eszközök az nVidia grafikus kártyák beállításához.
 %description progs -l pl.UTF-8
 Narzędzia do zarządzania kartami graficznymi nVidia.
 
-%ifarch %{x8664}
 %define	kernel_pkg()\
 %package -n kernel%{_alt_kernel}-video-nvidia\
 Summary:	nVidia kernel module for nVidia Architecture support\
@@ -234,6 +233,7 @@ cd ..\
 %install_kernel_modules -D installed -m kernel/nvidia-uvm -d misc\
 %{nil}
 
+%ifarch %{x8664}
 %{?with_kernel:%{expand:%create_kernel_packages}}
 %endif
 
