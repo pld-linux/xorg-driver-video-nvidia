@@ -152,7 +152,7 @@ firmy NVIDIA.
 %package doc
 Summary:	Documentation for NVIDIA Graphics Driver
 Group:		Documentation
-%{?noarchpackage}
+BuildArch:	noarch
 
 %description doc
 NVIDIA Accelerated Linux Graphics Driver README and Installation
