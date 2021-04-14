@@ -1,6 +1,6 @@
 --- NVIDIA-Linux-x86_64-387.22-no-compat32/nvidia-settings.desktop.orig	2017-10-30 19:01:41.321706656 +0100
 +++ NVIDIA-Linux-x86_64-387.22-no-compat32/nvidia-settings.desktop	2017-10-30 19:04:57.757191009 +0100
-@@ -1,9 +1,11 @@
+@@ -1,10 +1,12 @@
  [Desktop Entry]
  Type=Application
  Encoding=UTF-8
@@ -16,3 +16,4 @@
 +Icon=nvidia-settings
  Categories=Settings;HardwareSettings;
  
+ # Translation by Marcin Mikołajczak
