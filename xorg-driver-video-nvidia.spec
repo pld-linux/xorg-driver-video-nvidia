@@ -4,7 +4,7 @@
 # - kernel-drm is required on never kernels. driver for kernel-longterm not requires drm
 #
 # Conditional build:
-%bcond_with	system_libglvnd	# do not use system libglvnd
+%bcond_with	system_libglvnd	# use system libglvnd
 %bcond_without	kernel		# without kernel packages
 %bcond_without	userspace	# don't build userspace programs
 %bcond_with	settings	# package nvidia-settings here (GPL version of same packaged from nvidia-settings.spec)
@@ -118,6 +118,9 @@ Obsoletes:	X11-OpenGL-core < 1:7.0.0
 Obsoletes:	X11-OpenGL-libGL < 1:7.0.0
 Obsoletes:	XFree86-OpenGL-core < 1:7.0.0
 Obsoletes:	XFree86-OpenGL-libGL < 1:7.0.0
+%if %{with system_libglvnd}
+Obsoletes:	xorg-driver-video-nvidia-devel < 465.27-2
+%endif
 
 %description libs
 NVIDIA OpenGL (GL and GLX only) implementation libraries.
@@ -439,6 +442,7 @@ EOF
 %if %{without system_libglvnd}
 %attr(755,root,root) %{_libdir}/nvidia/libGL.so.1.7.0
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libGL.so.1
+%attr(755,root,root) %{_libdir}/nvidia/libGL.so
 %attr(755,root,root) %{_libdir}/nvidia/libGLX.so.0
 %attr(755,root,root) %{_libdir}/nvidia/libOpenGL.so.0
 %attr(755,root,root) %{_libdir}/nvidia/libGLdispatch.so.0
@@ -507,17 +511,16 @@ EOF
 %{_datadir}/vulkan/icd.d/nvidia_icd.json
 %endif
 
+%if %{without system_libglvnd}
 %files devel
 %defattr(644,root,root,755)
-%if %{without system_libglvnd}
-%attr(755,root,root) %{_libdir}/nvidia/libGL.so
 %attr(755,root,root) %{_libdir}/nvidia/libGLX.so
 %attr(755,root,root) %{_libdir}/nvidia/libOpenGL.so
 %attr(755,root,root) %{_libdir}/nvidia/libGLESv1_CM.so
 %attr(755,root,root) %{_libdir}/nvidia/libGLESv2.so
 %attr(755,root,root) %{_libdir}/nvidia/libEGL.so
-%endif
 %{_pkgconfigdir}/gl.pc
+%endif
 
 %files doc
 %defattr(644,root,root,755)
@@ -535,7 +538,7 @@ EOF
 %{_mandir}/man1/nvidia-smi.1*
 %{_mandir}/man1/nvidia-xconfig.1*
 %if %{with settings}
-%attr(755,root,root) /etc/X11/xinit/xinitrc.d/*.sh
+%attr(755,root,root) /etc/X11/xinit/xinitrc.d/nvidia-settings.sh
 %attr(755,root,root) %{_bindir}/nvidia-settings
 %{_mandir}/man1/nvidia-settings.1*
 %{_desktopdir}/nvidia-settings.desktop
