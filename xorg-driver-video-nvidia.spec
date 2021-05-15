@@ -69,37 +69,97 @@ BuildRoot:	%{tmpdir}/%{pname}-%{version}-root-%(id -u -n)
 %description
 This driver set adds improved 2D functionality to the Xorg X server as
 well as high performance OpenGL acceleration, AGP support, support for
-most flat panels, and 2D multiple monitor support. Supported hardware:
-modern NVIDIA GeForce (from GeForce2 MX) and Quadro (Quadro4 and up)
-based graphics accelerators.
+most flat panels, and 2D multiple monitor support.
 
-The older graphics chips are unsupported:
-- NV1 and RIVA 128/128ZX chips are supported in the base Xorg install
-  (nv driver)
-- TNT/TNT2/GeForce 256/GeForce2 Ultra/Quadro2 are suported by -legacy
-  drivers.
+Supported hardware:
+- GeForce 600 series (excluding 605/GT 610/GT 620/GT 645)
+- GeForce 600M series (GT 640M LE only)
+- GeForce 700 series (excluding GT 705)
+- GeForce 800M series (830M/840M/845M/850M/860M only)
+- GeForce 900/900M series (excluding 910M/920M)
+- GeForce 10 series (including GT 1010)
+- GeForce 10 mobile series
+- GeForce 16 series (also mobile)
+- GeForce MX100 series
+- GeForce MX200 series
+- GeForce MX300 series
+- GeForce MX400 series
+- GeForce RTX 20 series (also mobile)
+- GeForce RTX 30 series (also mobile)
+- GeForce TITAN series (GTX TITAN X/GTX TITAN Black/GTX TITAN Z)
+- NVIDIA RTX series (also mobile)
+- NVIDIA TITAN series (RTX/V/Xp)
+- NVS series (NVS 510/NVS 810 only)
+- Quadro NVS series (NVS 510/NVS 810 only)
+- Quadro Blade/Embedded series (M3000 SE/M5000 SE/P3000/P5000 only)
+- Quadro mobile series (K620M/K2200M/M*/P*/T* only)
+- Quadro series (410/K*/M*/P*/GP100/GV100 only)
+- Quadro RTX series (also mobile)
+- GRID series (K520)
+
+For older hardware see appropriate xorg-driver-video-nvidia-legacy-*
+driver series.
 
 %description -l hu.UTF-8
 Ez a meghajtó kibővíti az Xorg X szerver 2D működését OpenGL
 gyorsítással, AGP támogatással és támogatja a több monitort.
-Támogatott hardverek: modern NVIDIA GeForce (GeForce2 MX-től) és
-Quadro (Quadro4 és újabbak) alapú grafikai gyorsítók.
 
-A régekbbi grafikus chipek nem támogatottak:
-- NV1 és RIVA 128/128ZX chipek az alap Xorg telepítéssel (nv meghajtó)
-- TNT/TNT2/GeForce 256/GeForce2 Ultra/Quadro2 a -legacy driverekkel
-  támogatottak.
+Támogatott hardverek:
+- GeForce 600 series (- 605/GT 610/GT 620/GT 645)
+- GeForce 600M series (GT 640M LE)
+- GeForce 700 series (- GT 705)
+- GeForce 800M series (830M/840M/845M/850M/860M)
+- GeForce 900/900M series (- 910M/920M)
+- GeForce 10 series
+- GeForce 10 mobile series
+- GeForce 16 series (+mobile)
+- GeForce MX100 series
+- GeForce MX200 series
+- GeForce MX300 series
+- GeForce MX400 series
+- GeForce RTX 20 series (+mobile)
+- GeForce RTX 30 series (+mobile)
+- GeForce TITAN series (GTX TITAN X/GTX TITAN Black/GTX TITAN Z)
+- NVIDIA RTX series (+mobile)
+- NVIDIA TITAN series (RTX/V/Xp)
+- NVS series (NVS 510/NVS 810)
+- Quadro NVS series (NVS 510/NVS 810)
+- Quadro Blade/Embedded series (M3000 SE/M5000 SE/P3000/P5000)
+- Quadro mobile series (K620M/K2200M/M*/P*/T*)
+- Quadro series (410/K*/M*/P*/GP100/GV100)
+- Quadro RTX series (+mobile)
+- GRID series (K520)
 
 %description -l pl.UTF-8
 Usprawnione sterowniki dla kart graficznych nVidia do serwera Xorg,
 dające wysokowydajną akcelerację OpenGL, obsługę AGP i wielu monitorów
-2D. Obsługują w miarę nowe karty NVIDIA GeForce (od wersji GeForce2
-MX) oraz Quadro (od wersji Quadro4).
+2D.
 
-Starsze układy graficzne nie są obsługiwane przez ten pakiet:
-- NV1 i RIVA 128/128ZX są obsługiwane przez sterownik nv z Xorg
-- TNT/TNT2/GeForce 256/GeForce 2 Ultra/Quadro 2 są obsługiwane przez
-  sterowniki -legacy
+Obsługują karty:
+- GeForce serii 600 (oprócz 605/GT 610/GT 620/GT 645)
+- GeForce serii 600M (tylko GT 640M LE)
+- GeForce serii 700 (oprócz GT 705)
+- GeForce serii 800M (tylko 830M/840M/845M/850M/860M)
+- GeForce serii 900/900M series (oprócz 910M/920M)
+- GeForce serii 10 (wraz z GT 1010)
+- GeForce serii 10 mobile
+- GeForce serii 16 (także mobile)
+- GeForce serii MX100
+- GeForce serii MX200
+- GeForce serii MX300
+- GeForce serii MX400
+- GeForce serii RTX 20 (także mobile)
+- GeForce serii RTX 30 (także mobile)
+- GeForce serii TITAN (GTX TITAN X/GTX TITAN Black/GTX TITAN Z)
+- NVIDIA serii RTX (także mobile)
+- NVIDIA serii TITAN (RTX/V/Xp)
+- serii NVS (tylko NVS 510/NVS 810)
+- Quadro serii NVS (tylko NVS 510/NVS 810)
+- Quadro serii Blade/Embedded (tylko M3000 SE/M5000 SE/P3000/P5000)
+- Quadro mobile (tylko K620M/K2200M/M*/P*/T*)
+- Quadro (tylko 410/K*/M*/P*/GP100/GV100)
+- Quadro serii RTX (także mobile)
+- GRID (K520)
 
 %package libs
 Summary:	OpenGL (GL and GLX) Nvidia libraries
