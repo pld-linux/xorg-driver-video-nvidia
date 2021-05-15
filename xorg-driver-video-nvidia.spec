@@ -1,6 +1,5 @@
 # TODO
-# - should -libs Require main package?
-# - drop binary-only nvidia-settings from here, and use nvidia-settings.spec for it?
+# - drop binary-only nvidia-settings from here, and use nvidia-settings.spec for it
 # - kernel-drm is required on never kernels. driver for kernel-longterm not requires drm
 #
 # Conditional build:
