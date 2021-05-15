@@ -112,7 +112,7 @@ Requires:	libglvnd-libGL
 Requires:	libglvnd-libGLES
 %endif
 Requires:	libvdpau >= 0.3
-Provides:	OpenGL = 3.3
+Provides:	OpenGL = 4.6
 Provides:	OpenGL-GLX = 1.4
 Obsoletes:	X11-OpenGL-core < 1:7.0.0
 Obsoletes:	X11-OpenGL-libGL < 1:7.0.0
