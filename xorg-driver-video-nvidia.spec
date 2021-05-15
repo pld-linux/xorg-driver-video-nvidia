@@ -63,7 +63,6 @@ BuildRoot:	%{tmpdir}/%{pname}-%{version}-root-%(id -u -n)
 
 %define		_enable_debug_packages	0
 
-%define		_noautoreqdep	libGL.so.1 libnvcuvid.so
 # libnvidia-encode.so.*.* links with libnvcuvid.so instead of libnvcuvid.so.1
 %define		_noautoreq	libnvcuvid.so
 
