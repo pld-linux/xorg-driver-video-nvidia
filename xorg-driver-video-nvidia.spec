@@ -27,13 +27,13 @@ Summary(hu.UTF-8):	Linux meghajtók nVidia GeForce/Quadro chipekhez
 Summary(pl.UTF-8):	Sterowniki do kart graficznych nVidia GeForce/Quadro
 Name:		%{pname}%{?_pld_builder:%{?with_kernel:-kernel}}%{_alt_kernel}
 # when updating version here, keep nvidia-settings.spec in sync as well
-Version:	465.31
+Version:	470.57.02
 Release:	%{rel}%{?_pld_builder:%{?with_kernel:@%{_kernel_ver_str}}}
 Epoch:		1
 License:	nVidia Binary
 Group:		X11
 Source0:	https://us.download.nvidia.com/XFree86/Linux-x86_64/%{version}/NVIDIA-Linux-x86_64-%{version}.run
-# Source0-md5:	4996eefa54392b0c9541d22e88abab66
+# Source0-md5:	34b71dd32ab10d84dd256095291dc96f
 Source2:	%{pname}-xinitrc.sh
 Source3:	gl.pc.in
 Source4:	10-nvidia.conf
@@ -64,6 +64,8 @@ BuildRoot:	%{tmpdir}/%{pname}-%{version}-root-%(id -u -n)
 
 # libnvidia-encode.so.*.* links with libnvcuvid.so instead of libnvcuvid.so.1
 %define		_noautoreq	libnvcuvid.so
+
+%define		_noautostrip	.*/lib/firmware/.*
 
 %description
 This driver set adds improved 2D functionality to the Xorg X server as
@@ -276,6 +278,9 @@ sterownik nVidii dla Xorg/XFree86.\
 %if %{with kernel}\
 %files -n kernel%{_alt_kernel}-video-nvidia\
 %defattr(644,root,root,755)\
+%dir /lib/firmware/nvidia\
+%dir /lib/firmware/nvidia/%{version}\
+/lib/firmware/nvidia/%{version}/gsp.bin\
 /lib/modules/%{_kernel_ver}/misc/*.ko*\
 %endif\
 \
@@ -366,7 +371,7 @@ for f in \
 	%{srcdir}/libGLESv1_CM_nvidia.so.%{version}	\
 	%{srcdir}/libGLESv2_nvidia.so.%{version}		\
 %ifarch %{x8664}
-	%{srcdir}/libnvidia-egl-wayland.so.1.1.5		\
+	%{srcdir}/libnvidia-egl-wayland.so.1.1.7		\
 	%{srcdir}/libnvidia-eglcore.so.%{version}		\
 %endif
 	%{srcdir}/libcuda.so.%{version}			\
@@ -375,6 +380,7 @@ for f in \
 	%{srcdir}/libnvidia-cbl.so.%{version}	\
 	%{srcdir}/libnvidia-cfg.so.%{version}		\
 	%{srcdir}/libnvidia-ngx.so.%{version}		\
+	%{srcdir}/libnvidia-nvvm.so.4.0.0		\
 	%{srcdir}/libnvidia-rtcore.so.%{version}	\
 	%{srcdir}/libnvoptix.so.%{version}	\
 %endif
@@ -451,6 +457,7 @@ install -p nvidia_icd.json $RPM_BUILD_ROOT%{_datadir}/vulkan/icd.d
 %if %{with kernel}
 install -d $RPM_BUILD_ROOT
 cp -a installed/* $RPM_BUILD_ROOT
+install -D firmware/gsp.bin $RPM_BUILD_ROOT/lib/firmware/nvidia/%{version}/gsp.bin
 %endif
 %endif
 
@@ -541,6 +548,8 @@ EOF
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-cfg.so.1
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-ngx.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-ngx.so.1
+%attr(755,root,root) %{_libdir}/nvidia/libnvidia-nvvm.so.*.*
+%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvvm.so.4
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-rtcore.so.*.*
 %attr(755,root,root) %{_libdir}/nvidia/libnvoptix.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvoptix.so.1
