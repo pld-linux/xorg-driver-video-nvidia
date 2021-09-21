@@ -27,13 +27,13 @@ Summary(hu.UTF-8):	Linux meghajtók nVidia GeForce/Quadro chipekhez
 Summary(pl.UTF-8):	Sterowniki do kart graficznych nVidia GeForce/Quadro
 Name:		%{pname}%{?_pld_builder:%{?with_kernel:-kernel}}%{_alt_kernel}
 # when updating version here, keep nvidia-settings.spec in sync as well
-Version:	470.63.01
+Version:	470.74
 Release:	%{rel}%{?_pld_builder:%{?with_kernel:@%{_kernel_ver_str}}}
 Epoch:		1
 License:	nVidia Binary
 Group:		X11
 Source0:	https://us.download.nvidia.com/XFree86/Linux-x86_64/%{version}/NVIDIA-Linux-x86_64-%{version}.run
-# Source0-md5:	24ffc518e708addc9728f7f356f56ef7
+# Source0-md5:	279cbf4e1155a02e6a9f65e988794516
 Source2:	%{pname}-xinitrc.sh
 Source3:	gl.pc.in
 Source4:	10-nvidia.conf
@@ -549,7 +549,7 @@ EOF
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-ngx.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-ngx.so.1
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-nvvm.so.*.*
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvvm.so.4
+%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-nvvm.so.4
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-rtcore.so.*.*
 %attr(755,root,root) %{_libdir}/nvidia/libnvoptix.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvoptix.so.1
