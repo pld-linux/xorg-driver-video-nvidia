@@ -321,7 +321,7 @@ echo 'EXTRA_CFLAGS += -Wno-pointer-arith -Wno-sign-compare -Wno-unused' >> kerne
 rm -rf $RPM_BUILD_ROOT
 
 %if %{with userspace}
-install -d $RPM_BUILD_ROOT%{_libdir}/{nvidia,xorg/modules/{drivers,extensions/nvidia}} \
+install -d $RPM_BUILD_ROOT%{_libdir}/{gbm,nvidia,xorg/modules/{drivers,extensions/nvidia}} \
 	$RPM_BUILD_ROOT{%{_libdir}/vdpau,%{_bindir},%{_mandir}/man1} \
 	$RPM_BUILD_ROOT{%{_desktopdir},%{_pixmapsdir},/etc/X11/xinit/xinitrc.d} \
 	$RPM_BUILD_ROOT%{_sysconfdir}/{OpenCL/vendors,ld.so.conf.d,X11/xorg.conf.d} \
@@ -442,7 +442,7 @@ ln -sf libEGL_nvidia.so.%{version} $RPM_BUILD_ROOT%{_libdir}/nvidia/libEGL_nvidi
 ln -sf libGLESv1_CM_nvidia.so.%{version} $RPM_BUILD_ROOT%{_libdir}/nvidia/libGLESv1_CM_nvidia.so.1
 ln -sf libGLESv2_nvidia.so.%{version} $RPM_BUILD_ROOT%{_libdir}/nvidia/libGLESv2_nvidia.so.2
 
-ln -sf libnvidia-allocator.so.%{version} $RPM_BUILD_ROOT%{_libdir}/nvidia/libnvidia-drm_gbm.so
+ln -sf ../nvidia/libnvidia-allocator.so.%{version} $RPM_BUILD_ROOT%{_libdir}/gbm/nvidia-drm_gbm.so
 
 %ifarch %{x8664}
 install -p 10_nvidia.json $RPM_BUILD_ROOT%{_datadir}/glvnd/egl_vendor.d
@@ -508,6 +508,7 @@ EOF
 %{_sysconfdir}/OpenCL/vendors/nvidia.icd
 %endif
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/ld.so.conf.d/nvidia*.conf
+%attr(755,root,root) %{_libdir}/gbm/nvidia-drm_gbm.so
 %dir %{_libdir}/nvidia
 %if %{without system_libglvnd}
 %attr(755,root,root) %{_libdir}/nvidia/libGL.so.1.7.0
@@ -560,7 +561,6 @@ EOF
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-allocator.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-allocator.so.1
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-compiler.so.*.*
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-drm_gbm.so
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-encode.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-encode.so.1
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-fbc.so.1
