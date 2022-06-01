@@ -27,13 +27,13 @@ Summary(hu.UTF-8):	Linux meghajtók nVidia GeForce/Quadro chipekhez
 Summary(pl.UTF-8):	Sterowniki do kart graficznych nVidia GeForce/Quadro
 Name:		%{pname}%{?_pld_builder:%{?with_kernel:-kernel}}%{_alt_kernel}
 # when updating version here, keep nvidia-settings.spec in sync as well
-Version:	510.73.05
+Version:	515.48.07
 Release:	%{rel}%{?_pld_builder:%{?with_kernel:@%{_kernel_ver_str}}}
 Epoch:		1
 License:	nVidia Binary
 Group:		X11
 Source0:	https://us.download.nvidia.com/XFree86/Linux-x86_64/%{version}/NVIDIA-Linux-x86_64-%{version}.run
-# Source0-md5:	2c381e423082da848b1f6ea1158c69d2
+# Source0-md5:	d8529109092e1db0760becb9296abcfd
 Source2:	%{pname}-xinitrc.sh
 Source3:	gl.pc.in
 Source4:	10-nvidia.conf
@@ -380,7 +380,6 @@ for f in \
 %ifarch %{x8664}
 	%{srcdir}/libnvidia-cfg.so.%{version}		\
 	%{srcdir}/libnvidia-ngx.so.%{version}		\
-	%{srcdir}/libnvidia-nvvm.so.4.0.0		\
 	%{srcdir}/libnvidia-rtcore.so.%{version}	\
 	%{srcdir}/libnvidia-vulkan-producer.so.%{version}	\
 	%{srcdir}/libnvoptix.so.%{version}	\
@@ -393,6 +392,7 @@ for f in \
 	%{srcdir}/libnvidia-glsi.so.%{version}		\
 	%{srcdir}/libnvidia-glvkspirv.so.%{version}		\
 	%{srcdir}/libnvidia-ml.so.%{version}		\
+	%{srcdir}/libnvidia-nvvm.so.%{version}		\
 	%{srcdir}/libnvidia-opencl.so.%{version}		\
 	%{srcdir}/libnvidia-opticalflow.so.%{version}		\
 	%{srcdir}/libnvidia-ptxjitcompiler.so.%{version}	\
@@ -551,8 +551,6 @@ EOF
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-cfg.so.1
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-ngx.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-ngx.so.1
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-nvvm.so.*.*
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-nvvm.so.4
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-rtcore.so.*.*
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-vulkan-producer.so.*.*
 %attr(755,root,root) %{_libdir}/nvidia/libnvoptix.so.*.*
@@ -570,6 +568,8 @@ EOF
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-glvkspirv.so.*.*
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-ml.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-ml.so.1
+%attr(755,root,root) %{_libdir}/nvidia/libnvidia-nvvm.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-nvvm.so.4
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-opencl.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-opencl.so.1
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-opticalflow.so.*.*
