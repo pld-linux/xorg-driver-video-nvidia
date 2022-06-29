@@ -27,13 +27,13 @@ Summary(hu.UTF-8):	Linux meghajtók nVidia GeForce/Quadro chipekhez
 Summary(pl.UTF-8):	Sterowniki do kart graficznych nVidia GeForce/Quadro
 Name:		%{pname}%{?_pld_builder:%{?with_kernel:-kernel}}%{_alt_kernel}
 # when updating version here, keep nvidia-settings.spec in sync as well
-Version:	515.48.07
+Version:	515.57
 Release:	%{rel}%{?_pld_builder:%{?with_kernel:@%{_kernel_ver_str}}}
 Epoch:		1
 License:	nVidia Binary
 Group:		X11
 Source0:	https://us.download.nvidia.com/XFree86/Linux-x86_64/%{version}/NVIDIA-Linux-x86_64-%{version}.run
-# Source0-md5:	d8529109092e1db0760becb9296abcfd
+# Source0-md5:	784e4b8b84d62b0342d4106cb4cb4de5
 Source2:	%{pname}-xinitrc.sh
 Source3:	gl.pc.in
 Source4:	10-nvidia.conf
@@ -568,7 +568,7 @@ EOF
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-glvkspirv.so.*.*
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-ml.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-ml.so.1
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-nvvm.so.*.*.*
+%attr(755,root,root) %{_libdir}/nvidia/libnvidia-nvvm.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-nvvm.so.4
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-opencl.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-opencl.so.1
