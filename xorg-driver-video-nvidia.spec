@@ -27,13 +27,13 @@ Summary(hu.UTF-8):	Linux meghajtók nVidia GeForce/Quadro chipekhez
 Summary(pl.UTF-8):	Sterowniki do kart graficznych nVidia GeForce/Quadro
 Name:		%{pname}%{?_pld_builder:%{?with_kernel:-kernel}}%{_alt_kernel}
 # when updating version here, keep nvidia-settings.spec in sync as well
-Version:	525.89.02
+Version:	530.41.03
 Release:	%{rel}%{?_pld_builder:%{?with_kernel:@%{_kernel_ver_str}}}
 Epoch:		1
 License:	nVidia Binary
 Group:		X11
 Source0:	https://us.download.nvidia.com/XFree86/Linux-x86_64/%{version}/NVIDIA-Linux-x86_64-%{version}.run
-# Source0-md5:	2cd1ed226595db34f9390d0a85f370ff
+# Source0-md5:	9049dbe01410eac1e05b249de10f6b91
 Source2:	%{pname}-xinitrc.sh
 Source3:	gl.pc.in
 Source4:	10-nvidia.conf
@@ -280,7 +280,7 @@ sterownik nVidii dla Xorg/XFree86.\
 %defattr(644,root,root,755)\
 %dir /lib/firmware/nvidia\
 %dir /lib/firmware/nvidia/%{version}\
-/lib/firmware/nvidia/%{version}/gsp_ad10x.bin\
+/lib/firmware/nvidia/%{version}/gsp_ga10x.bin\
 /lib/firmware/nvidia/%{version}/gsp_tu10x.bin\
 /lib/modules/%{_kernel_ver}/misc/*.ko*\
 %endif\
@@ -373,7 +373,7 @@ for f in \
 	%{srcdir}/libGLESv2_nvidia.so.%{version}		\
 %ifarch %{x8664}
 	%{srcdir}/libnvidia-egl-gbm.so.1.1.0		\
-	%{srcdir}/libnvidia-egl-wayland.so.1.1.10		\
+	%{srcdir}/libnvidia-egl-wayland.so.1.1.11		\
 	%{srcdir}/libnvidia-eglcore.so.%{version}		\
 %endif
 	%{srcdir}/libcuda.so.%{version}			\
@@ -459,7 +459,7 @@ ln -sf libnvcuvid.so.1 $RPM_BUILD_ROOT%{_libdir}/nvidia/libnvcuvid.so
 %if %{with kernel}
 install -d $RPM_BUILD_ROOT
 cp -a installed/* $RPM_BUILD_ROOT
-install -D firmware/gsp_ad10x.bin $RPM_BUILD_ROOT/lib/firmware/nvidia/%{version}/gsp_ad10x.bin
+install -D firmware/gsp_ga10x.bin $RPM_BUILD_ROOT/lib/firmware/nvidia/%{version}/gsp_ga10x.bin
 install -D firmware/gsp_tu10x.bin $RPM_BUILD_ROOT/lib/firmware/nvidia/%{version}/gsp_tu10x.bin
 %endif
 %endif
