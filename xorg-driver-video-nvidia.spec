@@ -27,13 +27,13 @@ Summary(hu.UTF-8):	Linux meghajtók nVidia GeForce/Quadro chipekhez
 Summary(pl.UTF-8):	Sterowniki do kart graficznych nVidia GeForce/Quadro
 Name:		%{pname}%{?_pld_builder:%{?with_kernel:-kernel}}%{_alt_kernel}
 # when updating version here, keep nvidia-settings.spec in sync as well
-Version:	530.41.03
+Version:	535.54.03
 Release:	%{rel}%{?_pld_builder:%{?with_kernel:@%{_kernel_ver_str}}}
 Epoch:		1
 License:	nVidia Binary
 Group:		X11
 Source0:	https://us.download.nvidia.com/XFree86/Linux-x86_64/%{version}/NVIDIA-Linux-x86_64-%{version}.run
-# Source0-md5:	9049dbe01410eac1e05b249de10f6b91
+# Source0-md5:	ae579c6b94300b9d0f9289c9eaa704bb
 Source2:	%{pname}-xinitrc.sh
 Source3:	gl.pc.in
 Source4:	10-nvidia.conf
@@ -383,12 +383,13 @@ for f in \
 %ifarch %{x8664}
 	%{srcdir}/libnvidia-cfg.so.%{version}		\
 	%{srcdir}/libnvidia-ngx.so.%{version}		\
+	%{srcdir}/libnvidia-pkcs11.so.%{version}		\
+	%{srcdir}/libnvidia-pkcs11-openssl3.so.%{version}		\
 	%{srcdir}/libnvidia-rtcore.so.%{version}	\
 	%{srcdir}/libnvidia-vulkan-producer.so.%{version}	\
 	%{srcdir}/libnvoptix.so.%{version}	\
 %endif
 	%{srcdir}/libnvidia-allocator.so.%{version}	\
-	%{srcdir}/libnvidia-compiler.so.%{version}	\
 	%{srcdir}/libnvidia-encode.so.%{version}		\
 	%{srcdir}/libnvidia-fbc.so.%{version}	\
 	%{srcdir}/libnvidia-glcore.so.%{version}		\
@@ -558,6 +559,8 @@ EOF
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-cfg.so.1
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-ngx.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-ngx.so.1
+%attr(755,root,root) %{_libdir}/nvidia/libnvidia-pkcs11.so.*.*
+%attr(755,root,root) %{_libdir}/nvidia/libnvidia-pkcs11-openssl3.so.*.*
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-rtcore.so.*.*
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-vulkan-producer.so.*.*
 %attr(755,root,root) %{_libdir}/nvidia/libnvoptix.so.*.*
@@ -565,7 +568,6 @@ EOF
 %endif
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-allocator.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-allocator.so.1
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-compiler.so.*.*
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-encode.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-encode.so.1
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-fbc.so.1
