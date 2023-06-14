@@ -371,24 +371,8 @@ for f in \
 	%{srcdir}/libEGL_nvidia.so.%{version}		\
 	%{srcdir}/libGLESv1_CM_nvidia.so.%{version}	\
 	%{srcdir}/libGLESv2_nvidia.so.%{version}		\
-%ifarch %{x8664}
-	%{srcdir}/libcudadebugger.so.%{version}		\
-	%{srcdir}/libnvidia-api.so.1			\
-	%{srcdir}/libnvidia-egl-gbm.so.1.1.0		\
-	%{srcdir}/libnvidia-egl-wayland.so.1.1.11		\
-	%{srcdir}/libnvidia-eglcore.so.%{version}		\
-%endif
 	%{srcdir}/libcuda.so.%{version}			\
 	%{srcdir}/libnvcuvid.so.%{version}		\
-%ifarch %{x8664}
-	%{srcdir}/libnvidia-cfg.so.%{version}		\
-	%{srcdir}/libnvidia-ngx.so.%{version}		\
-	%{srcdir}/libnvidia-pkcs11.so.%{version}		\
-	%{srcdir}/libnvidia-pkcs11-openssl3.so.%{version}		\
-	%{srcdir}/libnvidia-rtcore.so.%{version}	\
-	%{srcdir}/libnvidia-vulkan-producer.so.%{version}	\
-	%{srcdir}/libnvoptix.so.%{version}	\
-%endif
 	%{srcdir}/libnvidia-allocator.so.%{version}	\
 	%{srcdir}/libnvidia-encode.so.%{version}		\
 	%{srcdir}/libnvidia-fbc.so.%{version}	\
@@ -401,6 +385,20 @@ for f in \
 	%{srcdir}/libnvidia-opticalflow.so.%{version}		\
 	%{srcdir}/libnvidia-ptxjitcompiler.so.%{version}	\
 	%{srcdir}/libnvidia-tls.so.%{version}		\
+%ifarch %{x8664}
+	%{srcdir}/libcudadebugger.so.%{version}		\
+	%{srcdir}/libnvidia-api.so.1			\
+	%{srcdir}/libnvidia-egl-gbm.so.1.1.0		\
+	%{srcdir}/libnvidia-egl-wayland.so.1.1.11		\
+	%{srcdir}/libnvidia-eglcore.so.%{version}		\
+	%{srcdir}/libnvidia-cfg.so.%{version}		\
+	%{srcdir}/libnvidia-ngx.so.%{version}		\
+	%{srcdir}/libnvidia-pkcs11.so.%{version}		\
+	%{srcdir}/libnvidia-pkcs11-openssl3.so.%{version}		\
+	%{srcdir}/libnvidia-rtcore.so.%{version}	\
+	%{srcdir}/libnvidia-vulkan-producer.so.%{version}	\
+	%{srcdir}/libnvoptix.so.%{version}	\
+%endif
 ; do
 	install -p $f $RPM_BUILD_ROOT%{_libdir}/nvidia
 done
@@ -538,34 +536,12 @@ EOF
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libGLX_indirect.so.0
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libGLX_nvidia.so.0
 %attr(755,root,root) %{_libdir}/nvidia/libGLX_nvidia.so.*.*
-%ifarch %{x8664}
-%attr(755,root,root) %{_libdir}/nvidia/libcudadebugger.so.*.*
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libcudadebugger.so.1
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-api.so.1
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-egl-gbm.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-egl-gbm.so.1
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-egl-wayland.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-egl-wayland.so.1
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-eglcore.so.*.*
-%endif
 %attr(755,root,root) %{_libdir}/nvidia/libcuda.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libcuda.so.1
 %attr(755,root,root) %{_libdir}/nvidia/libcuda.so
 %attr(755,root,root) %{_libdir}/nvidia/libnvcuvid.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvcuvid.so.1
 %attr(755,root,root) %{_libdir}/nvidia/libnvcuvid.so
-%ifarch %{x8664}
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-cfg.so.*.*
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-cfg.so.1
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-ngx.so.*.*
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-ngx.so.1
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-pkcs11.so.*.*
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-pkcs11-openssl3.so.*.*
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-rtcore.so.*.*
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-vulkan-producer.so.*.*
-%attr(755,root,root) %{_libdir}/nvidia/libnvoptix.so.*.*
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvoptix.so.1
-%endif
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-allocator.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-allocator.so.1
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-encode.so.*.*
@@ -589,6 +565,24 @@ EOF
 %attr(755,root,root) %{_libdir}/vdpau/libvdpau_nvidia.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/vdpau/libvdpau_nvidia.so.1
 %ifarch %{x8664}
+%attr(755,root,root) %{_libdir}/nvidia/libcudadebugger.so.*.*
+%attr(755,root,root) %ghost %{_libdir}/nvidia/libcudadebugger.so.1
+%attr(755,root,root) %{_libdir}/nvidia/libnvidia-api.so.1
+%attr(755,root,root) %{_libdir}/nvidia/libnvidia-egl-gbm.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-egl-gbm.so.1
+%attr(755,root,root) %{_libdir}/nvidia/libnvidia-egl-wayland.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-egl-wayland.so.1
+%attr(755,root,root) %{_libdir}/nvidia/libnvidia-eglcore.so.*.*
+%attr(755,root,root) %{_libdir}/nvidia/libnvidia-cfg.so.*.*
+%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-cfg.so.1
+%attr(755,root,root) %{_libdir}/nvidia/libnvidia-ngx.so.*.*
+%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-ngx.so.1
+%attr(755,root,root) %{_libdir}/nvidia/libnvidia-pkcs11.so.*.*
+%attr(755,root,root) %{_libdir}/nvidia/libnvidia-pkcs11-openssl3.so.*.*
+%attr(755,root,root) %{_libdir}/nvidia/libnvidia-rtcore.so.*.*
+%attr(755,root,root) %{_libdir}/nvidia/libnvidia-vulkan-producer.so.*.*
+%attr(755,root,root) %{_libdir}/nvidia/libnvoptix.so.*.*
+%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvoptix.so.1
 # which package should own those?
 %dir %{_datadir}/egl
 %dir %{_datadir}/egl/egl_external_platform.d
