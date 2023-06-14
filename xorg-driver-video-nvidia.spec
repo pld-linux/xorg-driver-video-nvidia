@@ -372,6 +372,8 @@ for f in \
 	%{srcdir}/libGLESv1_CM_nvidia.so.%{version}	\
 	%{srcdir}/libGLESv2_nvidia.so.%{version}		\
 %ifarch %{x8664}
+	%{srcdir}/libcudadebugger.so.%{version}		\
+	%{srcdir}/libnvidia-api.so.1			\
 	%{srcdir}/libnvidia-egl-gbm.so.1.1.0		\
 	%{srcdir}/libnvidia-egl-wayland.so.1.1.11		\
 	%{srcdir}/libnvidia-eglcore.so.%{version}		\
@@ -536,6 +538,9 @@ EOF
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libGLX_nvidia.so.0
 %attr(755,root,root) %{_libdir}/nvidia/libGLX_nvidia.so.*.*
 %ifarch %{x8664}
+%attr(755,root,root) %{_libdir}/nvidia/libcudadebugger.so.*.*
+%attr(755,root,root) %ghost %{_libdir}/nvidia/libcudadebugger.so.1
+%attr(755,root,root) %{_libdir}/nvidia/libnvidia-api.so.1
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-egl-gbm.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-egl-gbm.so.1
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-egl-wayland.so.*.*.*
