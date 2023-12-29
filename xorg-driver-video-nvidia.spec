@@ -175,6 +175,11 @@ Requires:	libglvnd-libGLES >= 1.3.4-2
 Requires:	libvdpau >= 0.3
 Provides:	OpenGL = 4.6
 Provides:	OpenGL-GLX = 1.4
+%if %{with system_libglvnd}
+Provides:	glvnd(EGL)%{?_isa}
+Provides:	glvnd(GL)%{?_isa}
+Provides:	glvnd(GLES)%{?_isa}
+%endif
 Obsoletes:	X11-OpenGL-core < 1:7.0.0
 Obsoletes:	X11-OpenGL-libGL < 1:7.0.0
 Obsoletes:	XFree86-OpenGL-core < 1:7.0.0
