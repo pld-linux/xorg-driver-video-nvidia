@@ -1,0 +1,11 @@
+--- NVIDIA-Linux-x86_64-550.107.02/kernel/conftest.sh~	2024-08-13 02:24:58.000000000 +0200
++++ NVIDIA-Linux-x86_64-550.107.02/kernel/conftest.sh	2024-08-13 02:25:41.159765941 +0200
+@@ -4558,7 +4558,7 @@
+                 }
+             }" > conftest$$.c
+ 
+-            $CC $CFLAGS -c conftest$$.c > /dev/null 2>&1
++            $CC -Wno-int-conversion $CFLAGS -c conftest$$.c > /dev/null 2>&1
+             rm -f conftest$$.c
+ 
+             if [ -f conftest$$.o ]; then
