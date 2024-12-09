@@ -20,7 +20,7 @@ exit 1
 
 %define		no_install_post_check_so 1
 
-%define		rel	2
+%define		rel	3
 %define		pname	xorg-driver-video-nvidia
 Summary:	Linux Drivers for nVidia GeForce/Quadro Chips
 Summary(hu.UTF-8):	Linux meghajtók nVidia GeForce/Quadro chipekhez
@@ -181,7 +181,7 @@ Provides:	glvnd(EGL)%{?_isa}
 Provides:	glvnd(GL)%{?_isa}
 Provides:	glvnd(GLES)%{?_isa}
 %endif
-Provides:	libgbm(backend)
+Provides:	libgbm(backend)%{?_isa}
 Obsoletes:	X11-OpenGL-core < 1:7.0.0
 Obsoletes:	X11-OpenGL-libGL < 1:7.0.0
 Obsoletes:	XFree86-OpenGL-core < 1:7.0.0
