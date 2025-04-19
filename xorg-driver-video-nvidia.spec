@@ -410,7 +410,6 @@ for f in \
 	%{srcdir}/libnvidia-sandboxutils.so.%{version}	\
 	%{srcdir}/libnvidia-vksc-core.so.%{version}	\
 	%{srcdir}/libnvoptix.so.%{version}		\
-	%{srcdir}/libnvidia-wayland-client.so.%{version}	\
 %endif
 ; do
 	install -p $f $RPM_BUILD_ROOT%{_libdir}/nvidia
@@ -603,8 +602,6 @@ EOF
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-vksc-core.so.1
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-vksc-core.so.*.*
 %attr(755,root,root) %{_libdir}/nvidia/libnvoptix.so.*.*
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-wayland-client.so.*.*
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvoptix.so.1
 # which package should own those?
 %dir %{_datadir}/egl
 %dir %{_datadir}/egl/egl_external_platform.d
