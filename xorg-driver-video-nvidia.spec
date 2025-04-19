@@ -591,14 +591,19 @@ EOF
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-egl-gbm.so.1
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-egl-wayland.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-egl-wayland.so.1
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-eglcore.so.*.*
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-cfg.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-cfg.so.1
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-ngx.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-ngx.so.1
+%attr(755,root,root) %{_libdir}/nvidia/libnvidia-pkcs11.so.*.*
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-pkcs11-openssl3.so.*.*
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-rtcore.so.*.*
+%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-sandboxutils.so.1
+%attr(755,root,root) %{_libdir}/nvidia/libnvidia-sandboxutils.so.*.*
+%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-vksc-core.so.1
+%attr(755,root,root) %{_libdir}/nvidia/libnvidia-vksc-core.so.*.*
 %attr(755,root,root) %{_libdir}/nvidia/libnvoptix.so.*.*
+%attr(755,root,root) %{_libdir}/nvidia/libnvidia-wayland-client.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvoptix.so.1
 # which package should own those?
 %dir %{_datadir}/egl
