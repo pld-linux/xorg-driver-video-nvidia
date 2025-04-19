@@ -378,40 +378,40 @@ for f in \
 	%{srcdir}/libGLX_nvidia.so.%{version}		\
 	%{srcdir}/libEGL_nvidia.so.%{version}		\
 	%{srcdir}/libGLESv1_CM_nvidia.so.%{version}	\
-	%{srcdir}/libGLESv2_nvidia.so.%{version}		\
+	%{srcdir}/libGLESv2_nvidia.so.%{version}	\
 	%{srcdir}/libcuda.so.%{version}			\
 	%{srcdir}/libnvcuvid.so.%{version}		\
 	%{srcdir}/libnvidia-allocator.so.%{version}	\
-	%{srcdir}/libnvidia-encode.so.%{version}		\
-	%{srcdir}/libnvidia-fbc.so.%{version}	\
-	%{srcdir}/libnvidia-glcore.so.%{version}		\
+	%{srcdir}/libnvidia-egl-xcb.so.1.0.0		\
+	%{srcdir}/libnvidia-egl-xlib.so.1.0.0		\
+	%{srcdir}/libnvidia-eglcore.so.%{version}	\
+	%{srcdir}/libnvidia-encode.so.%{version}	\
+	%{srcdir}/libnvidia-fbc.so.%{version}		\
+	%{srcdir}/libnvidia-glcore.so.%{version}	\
 	%{srcdir}/libnvidia-glsi.so.%{version}		\
-	%{srcdir}/libnvidia-glvkspirv.so.%{version}		\
-	%{srcdir}/libnvidia-gpucomp.so.%{version}		\
+	%{srcdir}/libnvidia-glvkspirv.so.%{version}	\
+	%{srcdir}/libnvidia-gpucomp.so.%{version}	\
 	%{srcdir}/libnvidia-ml.so.%{version}		\
 	%{srcdir}/libnvidia-nvvm.so.%{version}		\
-	%{srcdir}/libnvidia-opencl.so.%{version}		\
-	%{srcdir}/libnvidia-opticalflow.so.%{version}		\
+	%{srcdir}/libnvidia-opencl.so.%{version}	\
+	%{srcdir}/libnvidia-opticalflow.so.%{version}	\
 	%{srcdir}/libnvidia-ptxjitcompiler.so.%{version}	\
 	%{srcdir}/libnvidia-tls.so.%{version}		\
 %ifarch %{x8664}
 	%{srcdir}/libcudadebugger.so.%{version}		\
 	%{srcdir}/libnvidia-api.so.1			\
 	%{srcdir}/libnvidia-egl-gbm.so.1.1.2		\
-	%{srcdir}/libnvidia-egl-wayland.so.1.1.18		\
+	%{srcdir}/libnvidia-egl-wayland.so.1.1.18	\
 	%{srcdir}/libnvidia-cfg.so.%{version}		\
 	%{srcdir}/libnvidia-ngx.so.%{version}		\
-	%{srcdir}/libnvidia-pkcs11-openssl3.so.%{version}		\
-	%{srcdir}/libnvidia-rtcore.so.%{version}	\
-	%{srcdir}/libnvoptix.so.%{version}	\
-%endif
-	%{srcdir}/libnvidia-egl-xcb.so.1.0.0		\
-	%{srcdir}/libnvidia-egl-xlib.so.1.0.0		\
-	%{srcdir}/libnvidia-eglcore.so.%{version}		\
 	%{srcdir}/libnvidia-pkcs11.so.%{version}	\
+	%{srcdir}/libnvidia-pkcs11-openssl3.so.%{version}	\
+	%{srcdir}/libnvidia-rtcore.so.%{version}	\
 	%{srcdir}/libnvidia-sandboxutils.so.%{version}	\
 	%{srcdir}/libnvidia-vksc-core.so.%{version}	\
+	%{srcdir}/libnvoptix.so.%{version}		\
 	%{srcdir}/libnvidia-wayland-client.so.%{version}	\
+%endif
 ; do
 	install -p $f $RPM_BUILD_ROOT%{_libdir}/nvidia
 done
@@ -560,6 +560,11 @@ EOF
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-encode.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-encode.so.1
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-fbc.so.1
+%attr(755,root,root) %{_libdir}/nvidia/libnvidia-egl-xcb.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-egl-xcb.so.1
+%attr(755,root,root) %{_libdir}/nvidia/libnvidia-egl-xlib.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-egl-xlib.so.1
+%attr(755,root,root) %{_libdir}/nvidia/libnvidia-eglcore.so.*.*
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-fbc.so.*.*
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-glcore.so.*.*
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-glsi.so.*.*
