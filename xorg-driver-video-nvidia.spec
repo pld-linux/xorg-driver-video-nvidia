@@ -27,13 +27,13 @@ Summary(hu.UTF-8):	Linux meghajtók nVidia GeForce/Quadro chipekhez
 Summary(pl.UTF-8):	Sterowniki do kart graficznych nVidia GeForce/Quadro
 Name:		%{pname}%{?_pld_builder:%{?with_kernel:-kernel}}%{_alt_kernel}
 # when updating version here, keep nvidia-settings.spec in sync as well
-Version:	550.144.03
+Version:	570.133.07
 Release:	%{rel}%{?_pld_builder:%{?with_kernel:@%{_kernel_ver_str}}}
 Epoch:		1
 License:	nVidia Binary
 Group:		X11
 Source0:	https://us.download.nvidia.com/XFree86/Linux-x86_64/%{version}/NVIDIA-Linux-x86_64-%{version}.run
-# Source0-md5:	474f5fe69676f588634b856dd34705ef
+# Source0-md5:	27c62c49264e1a1da92ebcede9cf76bc
 Source2:	%{pname}-xinitrc.sh
 Source3:	gl.pc.in
 Source4:	10-nvidia.conf
@@ -397,15 +397,21 @@ for f in \
 %ifarch %{x8664}
 	%{srcdir}/libcudadebugger.so.%{version}		\
 	%{srcdir}/libnvidia-api.so.1			\
-	%{srcdir}/libnvidia-egl-gbm.so.1.1.1		\
-	%{srcdir}/libnvidia-egl-wayland.so.1.1.13		\
-	%{srcdir}/libnvidia-eglcore.so.%{version}		\
+	%{srcdir}/libnvidia-egl-gbm.so.1.1.2		\
+	%{srcdir}/libnvidia-egl-wayland.so.1.1.18		\
 	%{srcdir}/libnvidia-cfg.so.%{version}		\
 	%{srcdir}/libnvidia-ngx.so.%{version}		\
 	%{srcdir}/libnvidia-pkcs11-openssl3.so.%{version}		\
 	%{srcdir}/libnvidia-rtcore.so.%{version}	\
 	%{srcdir}/libnvoptix.so.%{version}	\
 %endif
+	%{srcdir}/libnvidia-egl-xcb.so.1.0.0		\
+	%{srcdir}/libnvidia-egl-xlib.so.1.0.0		\
+	%{srcdir}/libnvidia-eglcore.so.%{version}		\
+	%{srcdir}/libnvidia-pkcs11.so.%{version}	\
+	%{srcdir}/libnvidia-sandboxutils.so.%{version}	\
+	%{srcdir}/libnvidia-vksc-core.so.%{version}	\
+	%{srcdir}/libnvidia-wayland-client.so.%{version}	\
 ; do
 	install -p $f $RPM_BUILD_ROOT%{_libdir}/nvidia
 done
