@@ -20,7 +20,7 @@ exit 1
 
 %define		no_install_post_check_so 1
 
-%define		rel	1
+%define		rel	2
 %define		pname	xorg-driver-video-nvidia
 Summary:	Linux Drivers for nVidia GeForce/Quadro Chips
 Summary(hu.UTF-8):	Linux meghajtók nVidia GeForce/Quadro chipekhez
@@ -404,7 +404,6 @@ for f in \
 	%{srcdir}/libnvidia-egl-wayland.so.1.1.18	\
 	%{srcdir}/libnvidia-cfg.so.%{version}		\
 	%{srcdir}/libnvidia-ngx.so.%{version}		\
-	%{srcdir}/libnvidia-pkcs11.so.%{version}	\
 	%{srcdir}/libnvidia-pkcs11-openssl3.so.%{version}	\
 	%{srcdir}/libnvidia-rtcore.so.%{version}	\
 	%{srcdir}/libnvidia-sandboxutils.so.%{version}	\
@@ -594,7 +593,8 @@ EOF
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-cfg.so.1
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-ngx.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-ngx.so.1
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-pkcs11.so.*.*
+# req libcrypto.so.1.1()(64bit) not found
+#%attr(755,root,root) %{_libdir}/nvidia/libnvidia-pkcs11.so.*.*
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-pkcs11-openssl3.so.*.*
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-rtcore.so.*.*
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-sandboxutils.so.1
