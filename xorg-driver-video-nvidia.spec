@@ -20,26 +20,27 @@ exit 1
 
 %define		no_install_post_check_so 1
 
-%define		rel	2
+%define		rel	1
 %define		pname	xorg-driver-video-nvidia
 Summary:	Linux Drivers for nVidia GeForce/Quadro Chips
 Summary(hu.UTF-8):	Linux meghajtók nVidia GeForce/Quadro chipekhez
 Summary(pl.UTF-8):	Sterowniki do kart graficznych nVidia GeForce/Quadro
 Name:		%{pname}%{?_pld_builder:%{?with_kernel:-kernel}}%{_alt_kernel}
 # when updating version here, keep nvidia-settings.spec in sync as well
-Version:	570.133.07
+Version:	570.153.02
 Release:	%{rel}%{?_pld_builder:%{?with_kernel:@%{_kernel_ver_str}}}
 Epoch:		1
 License:	nVidia Binary
 Group:		X11
 Source0:	https://us.download.nvidia.com/XFree86/Linux-x86_64/%{version}/NVIDIA-Linux-x86_64-%{version}.run
-# Source0-md5:	27c62c49264e1a1da92ebcede9cf76bc
+# Source0-md5:	0981edd4e93370e329c6ba505f159bd5
 Source2:	%{pname}-xinitrc.sh
 Source3:	gl.pc.in
 Source4:	10-nvidia.conf
 Source5:	10-nvidia-modules.conf
 Patch0:		X11-driver-nvidia-desktop.patch
 Patch1:		gcc14.patch
+Patch2:		0003-Workaround-nv_vm_flags_-calling-GPL-only-code.patch
 URL:		https://www.nvidia.com/en-us/drivers/unix/
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpmbuild(macros) >= 1.752
@@ -319,6 +320,9 @@ rm -rf NVIDIA-Linux-x86_64-%{version}
 %setup -qDT -n NVIDIA-Linux-x86_64-%{version}
 %patch -P 0 -p1
 %patch -P 1 -p1
+cd kernel
+%patch -P 2 -p1
+cd ..
 echo 'EXTRA_CFLAGS += -Wno-pointer-arith -Wno-sign-compare -Wno-unused' >> kernel/Makefile.kbuild
 
 %build
@@ -382,8 +386,8 @@ for f in \
 	%{srcdir}/libcuda.so.%{version}			\
 	%{srcdir}/libnvcuvid.so.%{version}		\
 	%{srcdir}/libnvidia-allocator.so.%{version}	\
-	%{srcdir}/libnvidia-egl-xcb.so.1.0.0		\
-	%{srcdir}/libnvidia-egl-xlib.so.1.0.0		\
+	%{srcdir}/libnvidia-egl-xcb.so.1.0.2		\
+	%{srcdir}/libnvidia-egl-xlib.so.1.0.2		\
 	%{srcdir}/libnvidia-eglcore.so.%{version}	\
 	%{srcdir}/libnvidia-encode.so.%{version}	\
 	%{srcdir}/libnvidia-fbc.so.%{version}		\
@@ -401,7 +405,7 @@ for f in \
 	%{srcdir}/libcudadebugger.so.%{version}		\
 	%{srcdir}/libnvidia-api.so.1			\
 	%{srcdir}/libnvidia-egl-gbm.so.1.1.2		\
-	%{srcdir}/libnvidia-egl-wayland.so.1.1.18	\
+	%{srcdir}/libnvidia-egl-wayland.so.1.1.19	\
 	%{srcdir}/libnvidia-cfg.so.%{version}		\
 	%{srcdir}/libnvidia-ngx.so.%{version}		\
 	%{srcdir}/libnvidia-pkcs11-openssl3.so.%{version}	\
@@ -602,6 +606,7 @@ EOF
 %attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-vksc-core.so.1
 %attr(755,root,root) %{_libdir}/nvidia/libnvidia-vksc-core.so.*.*
 %attr(755,root,root) %{_libdir}/nvidia/libnvoptix.so.*.*
+%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvoptix.so.1
 # which package should own those?
 %dir %{_datadir}/egl
 %dir %{_datadir}/egl/egl_external_platform.d
