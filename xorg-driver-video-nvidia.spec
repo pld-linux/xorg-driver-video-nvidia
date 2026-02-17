@@ -27,13 +27,13 @@ Summary(hu.UTF-8):	Linux meghajtók nVidia GeForce/Quadro chipekhez
 Summary(pl.UTF-8):	Sterowniki do kart graficznych nVidia GeForce/Quadro
 Name:		%{pname}%{?_pld_builder:%{?with_kernel:-kernel}}%{_alt_kernel}
 # when updating version here, keep nvidia-settings.spec in sync as well
-Version:	580.95.05
+Version:	580.126.18
 Release:	%{rel}%{?_pld_builder:%{?with_kernel:@%{_kernel_ver_str}}}
 Epoch:		1
 License:	nVidia Binary
 Group:		X11
 Source0:	https://us.download.nvidia.com/XFree86/Linux-x86_64/%{version}/NVIDIA-Linux-x86_64-%{version}.run
-# Source0-md5:	3d23653c4898d08b1f3f031ea8cdaa93
+# Source0-md5:	85082dfe0d0dedbb4c514a9409e7a4c2
 Source2:	%{pname}-xinitrc.sh
 Source3:	gl.pc.in
 Source4:	10-nvidia.conf
@@ -318,12 +318,18 @@ cd %{_builddir}
 rm -rf NVIDIA-Linux-x86_64-%{version}
 /bin/sh %{SOURCE0} --extract-only
 %setup -qDT -n NVIDIA-Linux-x86_64-%{version}
-%patch -P 0 -p1
-%patch -P 1 -p1
+%patch -P0 -p1
+%patch -P1 -p1
 cd kernel
-%patch -P 2 -p1
+%patch -P2 -p1
 cd ..
 echo 'EXTRA_CFLAGS += -Wno-pointer-arith -Wno-sign-compare -Wno-unused' >> kernel/Makefile.kbuild
+
+# https://forums.developer.nvidia.com/t/objtool-naked-return-found-in-mitigation-rethunk-build-with-pre-compiled-blobs-on-kernel-6-19/360610
+cat <<'EOF' >>kernel/Kbuild
+$(obj)/nvidia.o: private objtool := true
+$(obj)/nvidia-modeset.o: private objtool := true
+EOF
 
 %build
 %ifarch %{x8664}
@@ -354,8 +360,8 @@ install -p nvidia-cuda-mps-{control,server} $RPM_BUILD_ROOT%{_bindir}
 cp -p nvidia-{smi,xconfig,cuda-mps-control}.1* $RPM_BUILD_ROOT%{_mandir}/man1
 install -p nvidia.icd $RPM_BUILD_ROOT%{_sysconfdir}/OpenCL/vendors
 
-install %{SOURCE4} $RPM_BUILD_ROOT/etc/X11/xorg.conf.d
-install %{SOURCE5} $RPM_BUILD_ROOT/etc/X11/xorg.conf.d
+cp -p %{SOURCE4} $RPM_BUILD_ROOT/etc/X11/xorg.conf.d
+cp -p %{SOURCE5} $RPM_BUILD_ROOT/etc/X11/xorg.conf.d
 sed -i -e 's|@@LIBDIR@@|%{_libdir}|g' $RPM_BUILD_ROOT/etc/X11/xorg.conf.d/10-nvidia-modules.conf
 install -p nvidia-drm-outputclass.conf $RPM_BUILD_ROOT/etc/X11/xorg.conf.d/10-nvidia-drm-outputclass.conf
 
@@ -386,8 +392,8 @@ for f in \
 	%{srcdir}/libcuda.so.%{version}			\
 	%{srcdir}/libnvcuvid.so.%{version}		\
 	%{srcdir}/libnvidia-allocator.so.%{version}	\
-	%{srcdir}/libnvidia-egl-xcb.so.1.0.3		\
-	%{srcdir}/libnvidia-egl-xlib.so.1.0.3		\
+	%{srcdir}/libnvidia-egl-xcb.so.1.0.4		\
+	%{srcdir}/libnvidia-egl-xlib.so.1.0.4		\
 	%{srcdir}/libnvidia-eglcore.so.%{version}	\
 	%{srcdir}/libnvidia-encode.so.%{version}	\
 	%{srcdir}/libnvidia-fbc.so.%{version}		\
@@ -404,7 +410,7 @@ for f in \
 %ifarch %{x8664}
 	%{srcdir}/libcudadebugger.so.%{version}		\
 	%{srcdir}/libnvidia-api.so.1			\
-	%{srcdir}/libnvidia-egl-gbm.so.1.1.2		\
+	%{srcdir}/libnvidia-egl-gbm.so.1.1.3		\
 	%{srcdir}/libnvidia-egl-wayland.so.1.1.20	\
 	%{srcdir}/libnvidia-cfg.so.%{version}		\
 	%{srcdir}/libnvidia-ngx.so.%{version}		\
@@ -506,10 +512,10 @@ EOF
 %defattr(644,root,root,755)
 %doc LICENSE NVIDIA_Changelog README.txt
 %dir %{_libdir}/xorg/modules/extensions/nvidia
-%attr(755,root,root) %{_libdir}/xorg/modules/extensions/nvidia/libglxserver_nvidia.so.*
-%attr(755,root,root) %{_libdir}/xorg/modules/extensions/nvidia/libglxserver_nvidia.so
-%attr(755,root,root) %{_libdir}/xorg/modules/drivers/nvidia_drv.so.*
-%attr(755,root,root) %{_libdir}/xorg/modules/drivers/nvidia_drv.so
+%{_libdir}/xorg/modules/extensions/nvidia/libglxserver_nvidia.so.*
+%{_libdir}/xorg/modules/extensions/nvidia/libglxserver_nvidia.so
+%{_libdir}/xorg/modules/drivers/nvidia_drv.so.*
+%{_libdir}/xorg/modules/drivers/nvidia_drv.so
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/X11/xorg.conf.d/10-nvidia.conf
 %{_sysconfdir}/X11/xorg.conf.d/10-nvidia-modules.conf
 %{_sysconfdir}/X11/xorg.conf.d/10-nvidia-drm-outputclass.conf
@@ -526,87 +532,87 @@ EOF
 %{_sysconfdir}/OpenCL/vendors/nvidia.icd
 %endif
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/ld.so.conf.d/nvidia*.conf
-%attr(755,root,root) %{_libdir}/gbm/nvidia-drm_gbm.so
+%{_libdir}/gbm/nvidia-drm_gbm.so
 %dir %{_libdir}/nvidia
 %if %{without system_libglvnd}
-%attr(755,root,root) %{_libdir}/nvidia/libGL.so.1.7.0
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libGL.so.1
-%attr(755,root,root) %{_libdir}/nvidia/libGL.so
-%attr(755,root,root) %{_libdir}/nvidia/libGLX.so.0
-%attr(755,root,root) %{_libdir}/nvidia/libOpenGL.so.0
-%attr(755,root,root) %{_libdir}/nvidia/libGLdispatch.so.0
-%attr(755,root,root) %{_libdir}/nvidia/libGLESv1_CM.so.1.2.0
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libGLESv1_CM.so.1
-%attr(755,root,root) %{_libdir}/nvidia/libGLESv2.so.2.1.0
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libGLESv2.so.2
-%attr(755,root,root) %{_libdir}/nvidia/libEGL.so.1.1.0
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libEGL.so.1
+%{_libdir}/nvidia/libGL.so.1.7.0
+%ghost %{_libdir}/nvidia/libGL.so.1
+%{_libdir}/nvidia/libGL.so
+%{_libdir}/nvidia/libGLX.so.0
+%{_libdir}/nvidia/libOpenGL.so.0
+%{_libdir}/nvidia/libGLdispatch.so.0
+%{_libdir}/nvidia/libGLESv1_CM.so.1.2.0
+%ghost %{_libdir}/nvidia/libGLESv1_CM.so.1
+%{_libdir}/nvidia/libGLESv2.so.2.1.0
+%ghost %{_libdir}/nvidia/libGLESv2.so.2
+%{_libdir}/nvidia/libEGL.so.1.1.0
+%ghost %{_libdir}/nvidia/libEGL.so.1
 %endif
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libEGL_nvidia.so.0
-%attr(755,root,root) %{_libdir}/nvidia/libEGL_nvidia.so.*.*
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libGLESv1_CM_nvidia.so.1
-%attr(755,root,root) %{_libdir}/nvidia/libGLESv1_CM_nvidia.so.*.*
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libGLESv2_nvidia.so.2
-%attr(755,root,root) %{_libdir}/nvidia/libGLESv2_nvidia.so.*.*
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libGLX_indirect.so.0
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libGLX_nvidia.so.0
-%attr(755,root,root) %{_libdir}/nvidia/libGLX_nvidia.so.*.*
-%attr(755,root,root) %{_libdir}/nvidia/libcuda.so.*.*
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libcuda.so.1
-%attr(755,root,root) %{_libdir}/nvidia/libcuda.so
-%attr(755,root,root) %{_libdir}/nvidia/libnvcuvid.so.*.*
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvcuvid.so.1
-%attr(755,root,root) %{_libdir}/nvidia/libnvcuvid.so
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-allocator.so.*.*
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-allocator.so.1
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-encode.so.*.*
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-encode.so.1
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-fbc.so.1
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-egl-xcb.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-egl-xcb.so.1
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-egl-xlib.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-egl-xlib.so.1
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-eglcore.so.*.*
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-fbc.so.*.*
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-glcore.so.*.*
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-glsi.so.*.*
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-glvkspirv.so.*.*
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-gpucomp.so.*.*
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-ml.so.*.*
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-ml.so.1
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-nvvm.so.*.*
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-nvvm.so.4
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-opencl.so.*.*
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-opencl.so.1
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-opticalflow.so.*.*
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-opticalflow.so.1
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-ptxjitcompiler.so.*.*
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-ptxjitcompiler.so.1
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-tls.so.*.*
-%attr(755,root,root) %{_libdir}/vdpau/libvdpau_nvidia.so.*.*
-%attr(755,root,root) %ghost %{_libdir}/vdpau/libvdpau_nvidia.so.1
+%ghost %{_libdir}/nvidia/libEGL_nvidia.so.0
+%{_libdir}/nvidia/libEGL_nvidia.so.*.*
+%ghost %{_libdir}/nvidia/libGLESv1_CM_nvidia.so.1
+%{_libdir}/nvidia/libGLESv1_CM_nvidia.so.*.*
+%ghost %{_libdir}/nvidia/libGLESv2_nvidia.so.2
+%{_libdir}/nvidia/libGLESv2_nvidia.so.*.*
+%ghost %{_libdir}/nvidia/libGLX_indirect.so.0
+%ghost %{_libdir}/nvidia/libGLX_nvidia.so.0
+%{_libdir}/nvidia/libGLX_nvidia.so.*.*
+%{_libdir}/nvidia/libcuda.so.*.*
+%ghost %{_libdir}/nvidia/libcuda.so.1
+%{_libdir}/nvidia/libcuda.so
+%{_libdir}/nvidia/libnvcuvid.so.*.*
+%ghost %{_libdir}/nvidia/libnvcuvid.so.1
+%{_libdir}/nvidia/libnvcuvid.so
+%{_libdir}/nvidia/libnvidia-allocator.so.*.*
+%ghost %{_libdir}/nvidia/libnvidia-allocator.so.1
+%{_libdir}/nvidia/libnvidia-encode.so.*.*
+%ghost %{_libdir}/nvidia/libnvidia-encode.so.1
+%ghost %{_libdir}/nvidia/libnvidia-fbc.so.1
+%{_libdir}/nvidia/libnvidia-egl-xcb.so.*.*.*
+%ghost %{_libdir}/nvidia/libnvidia-egl-xcb.so.1
+%{_libdir}/nvidia/libnvidia-egl-xlib.so.*.*.*
+%ghost %{_libdir}/nvidia/libnvidia-egl-xlib.so.1
+%{_libdir}/nvidia/libnvidia-eglcore.so.*.*
+%{_libdir}/nvidia/libnvidia-fbc.so.*.*
+%{_libdir}/nvidia/libnvidia-glcore.so.*.*
+%{_libdir}/nvidia/libnvidia-glsi.so.*.*
+%{_libdir}/nvidia/libnvidia-glvkspirv.so.*.*
+%{_libdir}/nvidia/libnvidia-gpucomp.so.*.*
+%{_libdir}/nvidia/libnvidia-ml.so.*.*
+%ghost %{_libdir}/nvidia/libnvidia-ml.so.1
+%{_libdir}/nvidia/libnvidia-nvvm.so.*.*
+%ghost %{_libdir}/nvidia/libnvidia-nvvm.so.4
+%{_libdir}/nvidia/libnvidia-opencl.so.*.*
+%ghost %{_libdir}/nvidia/libnvidia-opencl.so.1
+%{_libdir}/nvidia/libnvidia-opticalflow.so.*.*
+%ghost %{_libdir}/nvidia/libnvidia-opticalflow.so.1
+%{_libdir}/nvidia/libnvidia-ptxjitcompiler.so.*.*
+%ghost %{_libdir}/nvidia/libnvidia-ptxjitcompiler.so.1
+%{_libdir}/nvidia/libnvidia-tls.so.*.*
+%{_libdir}/vdpau/libvdpau_nvidia.so.*.*
+%ghost %{_libdir}/vdpau/libvdpau_nvidia.so.1
 %ifarch %{x8664}
-%attr(755,root,root) %{_libdir}/nvidia/libcudadebugger.so.*.*
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libcudadebugger.so.1
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-api.so.1
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-egl-gbm.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-egl-gbm.so.1
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-egl-wayland.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-egl-wayland.so.1
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-cfg.so.*.*
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-cfg.so.1
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-ngx.so.*.*
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-ngx.so.1
+%{_libdir}/nvidia/libcudadebugger.so.*.*
+%ghost %{_libdir}/nvidia/libcudadebugger.so.1
+%{_libdir}/nvidia/libnvidia-api.so.1
+%{_libdir}/nvidia/libnvidia-egl-gbm.so.*.*.*
+%ghost %{_libdir}/nvidia/libnvidia-egl-gbm.so.1
+%{_libdir}/nvidia/libnvidia-egl-wayland.so.*.*.*
+%ghost %{_libdir}/nvidia/libnvidia-egl-wayland.so.1
+%{_libdir}/nvidia/libnvidia-cfg.so.*.*
+%ghost %{_libdir}/nvidia/libnvidia-cfg.so.1
+%{_libdir}/nvidia/libnvidia-ngx.so.*.*
+%ghost %{_libdir}/nvidia/libnvidia-ngx.so.1
 # req libcrypto.so.1.1()(64bit) not found
 #%attr(755,root,root) %{_libdir}/nvidia/libnvidia-pkcs11.so.*.*
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-pkcs11-openssl3.so.*.*
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-rtcore.so.*.*
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-sandboxutils.so.1
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-sandboxutils.so.*.*
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvidia-vksc-core.so.1
-%attr(755,root,root) %{_libdir}/nvidia/libnvidia-vksc-core.so.*.*
-%attr(755,root,root) %{_libdir}/nvidia/libnvoptix.so.*.*
-%attr(755,root,root) %ghost %{_libdir}/nvidia/libnvoptix.so.1
+%{_libdir}/nvidia/libnvidia-pkcs11-openssl3.so.*.*
+%{_libdir}/nvidia/libnvidia-rtcore.so.*.*
+%ghost %{_libdir}/nvidia/libnvidia-sandboxutils.so.1
+%{_libdir}/nvidia/libnvidia-sandboxutils.so.*.*
+%ghost %{_libdir}/nvidia/libnvidia-vksc-core.so.1
+%{_libdir}/nvidia/libnvidia-vksc-core.so.*.*
+%{_libdir}/nvidia/libnvoptix.so.*.*
+%ghost %{_libdir}/nvidia/libnvoptix.so.1
 # which package should own those?
 %dir %{_datadir}/egl
 %dir %{_datadir}/egl/egl_external_platform.d
@@ -618,11 +624,11 @@ EOF
 %if %{without system_libglvnd}
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/nvidia/libGLX.so
-%attr(755,root,root) %{_libdir}/nvidia/libOpenGL.so
-%attr(755,root,root) %{_libdir}/nvidia/libGLESv1_CM.so
-%attr(755,root,root) %{_libdir}/nvidia/libGLESv2.so
-%attr(755,root,root) %{_libdir}/nvidia/libEGL.so
+%{_libdir}/nvidia/libGLX.so
+%{_libdir}/nvidia/libOpenGL.so
+%{_libdir}/nvidia/libGLESv1_CM.so
+%{_libdir}/nvidia/libGLESv2.so
+%{_libdir}/nvidia/libEGL.so
 %{_pkgconfigdir}/gl.pc
 %endif
 
