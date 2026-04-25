@@ -27,13 +27,13 @@ Summary(hu.UTF-8):	Linux meghajtók nVidia GeForce/Quadro chipekhez
 Summary(pl.UTF-8):	Sterowniki do kart graficznych nVidia GeForce/Quadro
 Name:		%{pname}%{?_pld_builder:%{?with_kernel:-kernel}}%{_alt_kernel}
 # when updating version here, keep nvidia-settings.spec in sync as well
-Version:	580.126.18
+Version:	595.58.03
 Release:	%{rel}%{?_pld_builder:%{?with_kernel:@%{_kernel_ver_str}}}
 Epoch:		1
 License:	nVidia Binary
 Group:		X11
 Source0:	https://us.download.nvidia.com/XFree86/Linux-x86_64/%{version}/NVIDIA-Linux-x86_64-%{version}.run
-# Source0-md5:	85082dfe0d0dedbb4c514a9409e7a4c2
+# Source0-md5:	8d98a183bf994af0ff19980e0ef430f2
 Source2:	%{pname}-xinitrc.sh
 Source3:	gl.pc.in
 Source4:	10-nvidia.conf
@@ -392,8 +392,8 @@ for f in \
 	%{srcdir}/libcuda.so.%{version}			\
 	%{srcdir}/libnvcuvid.so.%{version}		\
 	%{srcdir}/libnvidia-allocator.so.%{version}	\
-	%{srcdir}/libnvidia-egl-xcb.so.1.0.4		\
-	%{srcdir}/libnvidia-egl-xlib.so.1.0.4		\
+	%{srcdir}/libnvidia-egl-xcb.so.1.0.5		\
+	%{srcdir}/libnvidia-egl-xlib.so.1.0.5		\
 	%{srcdir}/libnvidia-eglcore.so.%{version}	\
 	%{srcdir}/libnvidia-encode.so.%{version}	\
 	%{srcdir}/libnvidia-fbc.so.%{version}		\
