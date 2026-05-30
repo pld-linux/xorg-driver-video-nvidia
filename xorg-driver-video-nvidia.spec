@@ -20,7 +20,7 @@ exit 1
 
 %define		no_install_post_check_so 1
 
-%define		rel	1
+%define		rel	2
 %define		pname	xorg-driver-video-nvidia
 Summary:	Linux Drivers for nVidia GeForce/Quadro Chips
 Summary(hu.UTF-8):	Linux meghajtók nVidia GeForce/Quadro chipekhez
@@ -251,7 +251,7 @@ Eszközök az nVidia grafikus kártyák beállításához.
 %description progs -l pl.UTF-8
 Narzędzia do zarządzania kartami graficznymi nVidia.
 
-%define	kernel_pkg()\
+%define	kernel_pkg() \
 %package -n kernel%{_alt_kernel}-video-nvidia\
 Summary:	nVidia kernel module for nVidia Architecture support\
 Summary(de.UTF-8):	Das nVidia-Kern-Modul für die nVidia-Architektur-Unterstützung\
@@ -300,7 +300,7 @@ sterownik nVidii dla Xorg/XFree86.\
 %depmod %{_kernel_ver}\
 %{nil}
 
-%define build_kernel_pkg()\
+%define build_kernel_pkg() \
 cd kernel\
 %{__make} SYSSRC=%{_kernelsrcdir} clean\
 %{__make} SYSSRC=%{_kernelsrcdir} IGNORE_CC_MISMATCH=1 NV_VERBOSE=1 CC=%{__cc} module\
