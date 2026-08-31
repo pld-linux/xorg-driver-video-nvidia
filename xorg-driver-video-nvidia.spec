@@ -33,7 +33,7 @@ Epoch:		1
 License:	nVidia Binary
 Group:		X11
 Source0:	https://us.download.nvidia.com/XFree86/Linux-x86_64/%{version}/NVIDIA-Linux-x86_64-%{version}.run
-# Source0-md5:	c5c9a15e4a7c77af979755133122f9cf
+# Source0-md5:	27a27276ca0bfad7881d635cb3388849
 Source2:	%{pname}-xinitrc.sh
 Source3:	gl.pc.in
 Source4:	10-nvidia.conf
